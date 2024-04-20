@@ -1,5 +1,5 @@
 
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import connect from "../config.js";
 import tryCatch from "./utils/trycatch.js";
 
