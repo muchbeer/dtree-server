@@ -33,8 +33,8 @@ app.use('/api/airtime', routerAirtime);
 
 const port = 5000;
 
-app.get('/test', (req, res) => {
-  console.log('The Global env variable is : ' + process.env.TEST);
+app.get('/api', (req, res) => {
+  
   res.status(200).json( {user: 'Login successful'} )
 })
 
