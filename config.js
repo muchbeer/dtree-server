@@ -12,6 +12,7 @@ const pool = new Pool({
   database: process.env.DB_DATABASE_ONLINE,
   password: process.env.DB_PASSWORD_ONLINE,
   port: 5432,
+  ssl: true
 });
 
 const connect = 
