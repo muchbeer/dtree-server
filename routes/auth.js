@@ -10,8 +10,10 @@ const router = express.Router();
 router.get('/time', (req, res) => {
     const serverTime = new Date().toISOString(); 
 
-    var offset = new Date().getTimezoneOffset();
-    const timez = { toIsoString: serverTime, timeZone: offset }
+    const options = { timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone  };
+      // const { timeZone } = new Date().toLocaleString('en', options);
+      const timeWithZone = new Date().toLocaleString('en', 180 );
+    const timez = { toIsoString: serverTime, timeZone: timeWithZone }
     return res.json({ isLogged: true, time: timez});  
 })
 
