@@ -105,8 +105,9 @@ const sendAirtimeToDb = async(respData, isSingle) => {
 
   const { totalAmount , totalDiscount, errorMessage,  responses }  = respData
       const date = new Date()
-      const datestr= date.toString();
-
+      //let s= new Date().toString();
+      const datestr= date.toLocaleString()
+      
       try {
       const sql = 'INSERT INTO dtree_airtime_main ( total_amount, total_discount, error_message, connect_date ) VALUES ( $1, $2, $3, $4 ) RETURNING *';
       const sql_received = 'INSERT INTO dtree_airtime_received ( amount, discount, error_message, phone_number, request_id, status, connect_id_main, is_single_airtime  ) VALUES( $1, $2, $3, $4, $5, $6, $7, $8 ) RETURNING *';
