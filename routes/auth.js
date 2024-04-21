@@ -19,7 +19,7 @@ const offsetMinutes = 3 * 60;
 const gmtPlus3Date = new Date(utcDate.getTime() + offsetMinutes * 60000);
 
   // Format the GMT+3 date
-const datestr = gmtPlus3Date.toString().slice(0, -28); 
+const datestr = gmtPlus3Date.toString().slice(0, -37); 
 
     return res.json({ isLogged: true, time: datestr });  
 })

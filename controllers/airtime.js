@@ -115,7 +115,7 @@ const sendAirtimeToDb = async(respData, isSingle) => {
   const gmtPlus3Date = new Date(utcDate.getTime() + offsetMinutes * 60000);
 
       // Format the GMT+3 date
-  const datestr = gmtPlus3Date.toString().slice(0, -28); 
+  const datestr = gmtPlus3Date.toString().slice(0, -37); 
  
       try {
       const sql = 'INSERT INTO dtree_airtime_main ( total_amount, total_discount, error_message, connect_date ) VALUES ( $1, $2, $3, $4 ) RETURNING *';
