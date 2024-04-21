@@ -8,7 +8,9 @@ dotenv.config();
 const router = express.Router();
 
 router.get('/test', (req, res) => {
-    return res.json({ isLogged: true, user: 'User authenticated'});  
+    const serverTime = new Date().toISOString(); 
+    const timez = {server: serverTime}
+    return res.json({ isLogged: true, time: timez});  
 })
 
 router.post('/register', register);
