@@ -7,7 +7,7 @@ import { enableAirtime, getUsers, login, register } from "../controllers/user.js
 dotenv.config();
 const router = express.Router();
 
-router.get('/test', (req, res) => {
+router.get('/time', (req, res) => {
     const serverTime = new Date().toISOString(); 
     const timez = {server: serverTime}
     return res.json({ isLogged: true, time: timez});  
