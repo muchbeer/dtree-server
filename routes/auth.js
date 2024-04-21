@@ -8,27 +8,20 @@ dotenv.config();
 const router = express.Router();
 
 router.get('/time', (req, res) => {
-    const serverTime = new Date().toISOString(); 
 
+            // Current UTC time
+  const utcDate = new Date();
 
-      // Current UTC time
-const utcDate = new Date();
-
-// Offset for GMT+3 in minutes (3 hours * 60 minutes)
+  // Offset for GMT+3 in minutes (3 hours * 60 minutes)
 const offsetMinutes = 3 * 60;
 
-// Convert UTC to GMT+3
+  // Convert UTC to GMT+3
 const gmtPlus3Date = new Date(utcDate.getTime() + offsetMinutes * 60000);
 
-// Format the GMT+3 date
-const formattedDate = gmtPlus3Date.toString(); // You can format it as needed
+  // Format the GMT+3 date
+const datestr = gmtPlus3Date.toString().slice(0, -28); 
 
-
-const utcformat = utcDate.toISOString()
-
-
-    const timez = { toIsoString: serverTime, utcTime : utcformat, gmtTime: formattedDate };
-    return res.json({ isLogged: true, time: timez});  
+    return res.json({ isLogged: true, time: datestr });  
 })
 
 router.post('/register', register);
