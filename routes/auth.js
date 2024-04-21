@@ -10,8 +10,6 @@ const router = express.Router();
 router.get('/time', (req, res) => {
     const serverTime = new Date().toISOString(); 
 
-    const options = { timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone  };
-      const timeWithZone = new Date().toLocaleString();
 
       // Current UTC time
 const utcDate = new Date();
@@ -23,7 +21,7 @@ const offsetMinutes = 3 * 60;
 const gmtPlus3Date = new Date(utcDate.getTime() + offsetMinutes * 60000);
 
 // Format the GMT+3 date
-const formattedDate = gmtPlus3Date.toISOString(); // You can format it as needed
+const formattedDate = gmtPlus3Date.toLocaleString(); // You can format it as needed
 
 
 const utcformat = utcDate.toISOString()
