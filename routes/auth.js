@@ -9,7 +9,9 @@ const router = express.Router();
 
 router.get('/time', (req, res) => {
     const serverTime = new Date().toISOString(); 
-    const timez = {server: serverTime}
+
+    var offset = new Date().getTimezoneOffset();
+    const timez = { toIsoString: serverTime, timeZone: offset }
     return res.json({ isLogged: true, time: timez});  
 })
 

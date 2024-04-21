@@ -105,8 +105,8 @@ const sendAirtimeToDb = async(respData, isSingle) => {
 
   const { totalAmount , totalDiscount, errorMessage,  responses }  = respData
       const date = new Date()
-      const datestr = date.toLocaleDateString();
-      const datestr2= date.toLocaleString();
+      const datestr2 = date.toLocaleDateString();
+      const datestr= date.toLocaleString();
       const datestr3 = date.toDateString();
       const datestr4Hours = date.getHours();
       const datestr4Minute = date.getMinutes();
