@@ -116,7 +116,7 @@ const sendAirtimeToDb = async(respData, isSingle) => {
       //from chat gpt 
       const options = { timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone  };
       const { timeZone } = new Date().toLocaleString('en', options);
-      const timeWithZone = date.toLocaleDateString('en', options );
+      const timeWithZone = date.toLocaleString('en', options );
 
       //console.log('datestr to ')
       console.log('datestr2 to LocaleString : ' + datestr2 );
@@ -126,7 +126,7 @@ const sendAirtimeToDb = async(respData, isSingle) => {
       console.log('datestr5 to time String ' + datestr5 );
       console.log('datestr6 to LocateTimeString ' + datestr6 );
       console.log('the time zone is now : ' + timeZone);
-      console.log('timeWithZone all together ' + timeWithZone );
+      console.log('timeWithZone all together finest' + timeWithZone );
       
       try {
       const sql = 'INSERT INTO dtree_airtime_main ( total_amount, total_discount, error_message, connect_date ) VALUES ( $1, $2, $3, $4 ) RETURNING *';
