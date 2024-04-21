@@ -21,7 +21,7 @@ const offsetMinutes = 3 * 60;
 const gmtPlus3Date = new Date(utcDate.getTime() + offsetMinutes * 60000);
 
 // Format the GMT+3 date
-const formattedDate = gmtPlus3Date.toLocaleString(); // You can format it as needed
+const formattedDate = gmtPlus3Date.toString(); // You can format it as needed
 
 
 const utcformat = utcDate.toISOString()
