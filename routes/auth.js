@@ -12,9 +12,10 @@ router.get('/time', (req, res) => {
 
     const options = { timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone  };
       // const { timeZone } = new Date().toLocaleString('en', options);
-      const timeWithZone = new Date().toLocaleString('en', 240 );
+      const timeWithZone = new Date().toLocaleString();
+      const timeCorrection = new Date().toString();
   
-    const timez = { toIsoString: serverTime, timeZone: timeWithZone}
+    const timez = { toIsoString: serverTime, timeZone: timeWithZone, newTime: timeCorrection };
     return res.json({ isLogged: true, time: timez});  
 })
 
