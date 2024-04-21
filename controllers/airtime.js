@@ -105,8 +105,21 @@ const sendAirtimeToDb = async(respData, isSingle) => {
 
   const { totalAmount , totalDiscount, errorMessage,  responses }  = respData
       const date = new Date()
-      //let s= new Date().toString();
-      const datestr= date.toLocaleString()
+      const datestr = date.toLocaleDateString();
+      const datestr2= date.toLocaleString();
+      const datestr3 = date.toDateString();
+      const datestr4Hours = date.getHours();
+      const datestr4Minute = date.getMinutes();
+      const datestr5 = date.toTimeString();
+      const datestr6 = date.toLocaleTimeString();
+
+      //console.log('datestr to ')
+      console.log('datestr2 to LocaleString : ' + datestr2 );
+      console.log('datestr3 to Date String() ' + datestr3 );
+      console.log('datestr4Hours to get Hours ' + datestr4Hours );
+      console.log('datestr4Minute ' + datestr4Minute);
+      console.log('datestr5 to time String ' + datestr5 );
+      console.log('datestr6 to LocateTimeString ' + datestr6 );
       
       try {
       const sql = 'INSERT INTO dtree_airtime_main ( total_amount, total_discount, error_message, connect_date ) VALUES ( $1, $2, $3, $4 ) RETURNING *';
