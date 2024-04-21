@@ -15,7 +15,8 @@ router.get('/time', (req, res) => {
       const timeWithZone = new Date().toLocaleString();
       const timeCorrection = new Date().toString();
   
-    const timez = { toIsoString: serverTime, timeZone: timeWithZone, newTime: timeCorrection };
+      var createdDateTime = new Date(timeWithZone + 'Z');
+    const timez = { toIsoString: serverTime, timeZone: timeWithZone, newTimeZ: createdDateTime };
     return res.json({ isLogged: true, time: timez});  
 })
 
