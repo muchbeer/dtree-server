@@ -17,7 +17,7 @@ export const register = tryCatch(async (req, res) => {
    
          await connect.query(sql, values)
         .then((result)=> {
-           return res.status(201).json( {success: true, result: result.rows[0], token });  
+           return res.status(201).json( {success: true, result: result.rows[0] });  
         })
         .catch(ex => {
            return res.status(409).json( {success: false, message: ex.message} )
