@@ -2,13 +2,9 @@
 import bcrypt from "bcryptjs";
 import connect from "../config.js";
 import tryCatch from "./utils/trycatch.js";
-import jwt from "jsonwebtoken";
 
 export const register = tryCatch(async (req, res) => {
     const { name, lastname, email, password } = req.body; 
-    const token = jwt.sign({ name , email }, process.env.JWT_SECRET, {
-        expiresIn: '1h',
-    });
 
     const sql = 'INSERT INTO dtree_users (first_name, last_name, email, pass, enable_airtime, is_register) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
  
