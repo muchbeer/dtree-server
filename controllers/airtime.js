@@ -82,7 +82,7 @@ export const sendSingleAirtime = tryCatch(async (req, res) => {
             //console.log(error);
             return res.status(400).json({ success: false, message: ex.message });
         }); 
-})
+});
 
 export const airtimeCallback = tryCatch(async (req, res) => {
   const { status, requestId } = req.body
