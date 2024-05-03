@@ -11,22 +11,26 @@ const messageApi = africasTalking.SMS;
 
 
 export const getMessage = tryCatch(async (req, res ) => {
-   
-    const sql = 'SELECT * FROM dtree_message_main ORDER BY id desc';
+    const { user } = req.body;
+    //const sql = 'SELECT * FROM message_main ORDER BY id desc';
+    const user_sql = 'SELECT * FROM dtree_users JOIN message_main ON dtree_users.email = message_main.user_email WHERE message_main.user_email = $1';
+    const values = [ user.email ];
 
-    const result_view_message = await connect.query( sql );
+    const result_view_message = await connect.query( user_sql, values );
     const fetch_data = result_view_message.rows
     return res.status(200).json( {success: true , result: fetch_data} )
   });
 
 export const getAllMessages = tryCatch(async (req, res) => {
 
-    const sql = 'SELECT * FROM dtree_message_received WHERE main_id = $1';
+    // const sql = 'SELECT * FROM dtree_message_received WHERE main_id = $1';
+    const user_sql = 'SELECT * FROM dtree_users JOIN message_received ON dtree_users.email = message_received.user_email WHERE main_id = $1';
+   
         
         const {id} = req.body;
         const values =  [ id ]
     
-        await connect.query( sql, values )
+        await connect.query( user_sql, values )
          .then( result_messages => {
           return res.status(200).json( { success: true, result: result_messages.rows });
          })
@@ -37,7 +41,7 @@ export const getAllMessages = tryCatch(async (req, res) => {
 
 export const uploadMessages = tryCatch(async (req, res) => {
 
-    const { phoneNumbers, sid, message } = req.body;
+    const { phoneNumbers, sid, message, user } = req.body;
       
     const data =   {
         enqueue: true,
@@ -57,7 +61,7 @@ export const uploadMessages = tryCatch(async (req, res) => {
       });
   
     if(resp.data) {
-      sendBulkSMSToDb( resp.data, false, message );
+      sendBulkSMSToDb( resp.data, false, message, user.email );
       return res.status(201).json( {success: true, result: resp.data } )
     } else {
       return res.status(400).json( {success: false, message: 'Failed to submit the file'} )
@@ -100,7 +104,7 @@ export const messageCallback = tryCatch(async (req, res) => {
   
   });
 
-const sendBulkSMSToDb = async(respData, isSingle, userMessage) => {
+const sendBulkSMSToDb = async(respData, isSingle, userMessage, user) => {
   const { SMSMessageData }  = respData
 
   const utcDate = new Date();
@@ -112,9 +116,9 @@ const sendBulkSMSToDb = async(respData, isSingle, userMessage) => {
   const datestr = gmtPlus3Date.toString().slice(0, -37); 
 
   try {
-    const sql = 'INSERT INTO dtree_message_main ( description, connect_date, user_message  ) VALUES ( $1, $2, $3 ) RETURNING *';
-    const sql_received = 'INSERT INTO dtree_message_received (  phone_number, message_cost, message_id, status, status_code, main_id, is_single_message  ) VALUES( $1, $2, $3, $4, $5, $6, $7) RETURNING *';
-    const values = [  SMSMessageData.Message, datestr, userMessage ];
+    const sql = 'INSERT INTO message_main ( description, connect_date, user_message, user_email  ) VALUES ( $1, $2, $3, $4 ) RETURNING *';
+    const sql_received = 'INSERT INTO message_received (  phone_number, message_cost, message_id, status, status_code, main_id, is_single_message, user_email  ) VALUES( $1, $2, $3, $4, $5, $6, $7, $8) RETURNING *';
+    const values = [  SMSMessageData.Message, datestr, userMessage, user ];
 
 
     const result_message_main = await connect.query(sql, values)
@@ -123,7 +127,7 @@ const sendBulkSMSToDb = async(respData, isSingle, userMessage) => {
 
     SMSMessageData.Recipients.forEach( async( message ) => {
 
-    const values_message = [ message.number, message.cost, message.messageId, message.status, message.statusCode, main_id, isSingle];
+    const values_message = [ message.number, message.cost, message.messageId, message.status, message.statusCode, main_id, isSingle, user];
 
     await connect.query(sql_received, values_message);
 

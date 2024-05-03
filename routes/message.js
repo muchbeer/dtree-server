@@ -3,7 +3,7 @@ import { getAllMessages, getMessage, messageCallback, sendSingleMessage, uploadM
 
 const routerMessage = Router();
 
-routerMessage.get('/', getMessage);
+routerMessage.post('/', getMessage);
 routerMessage.post('/received', getAllMessages);
 routerMessage.post('/upload', uploadMessages);
 routerMessage.post('/sendone', sendSingleMessage);
