@@ -15,11 +15,14 @@ const africasTalking = AfricasTalking(credentials);
 const airtime = africasTalking.AIRTIME;
 
 export const getAirtime = tryCatch(async (req, res) => {
+  const { user } = req.body;
    
    // const sql = 'SELECT * FROM dtree_airtime_main ORDER BY id desc';
-    const user_sql = 'SELECT * FROM dtree_users JOIN airtime_main ON dtree_users.email = airtime_main.user_email WHERE  ORDER BY id desc';
+    const user_sql = 'SELECT * FROM dtree_users JOIN airtime_main ON dtree_users.email = airtime_main.user_email WHERE airtime_main.user_email = $1 ORDER BY airtime_main.id desc';
+  //  const user_sql = 'SELECT * FROM dtree_users JOIN message_main ON dtree_users.email = message_main.user_email WHERE message_main.user_email = $1';
 
-    const result_view_airtime = await connect.query( user_sql );
+    const values = [ user.email ]
+    const result_view_airtime = await connect.query( user_sql, values );
     const fetch_data = result_view_airtime.rows
 
     return res.status(200).json( {success: true , result: fetch_data} )
@@ -60,6 +63,12 @@ export const uploadAirtimes = tryCatch(async (req, res) => {
     });
 
   if(resp.data) {
+
+    const outputError = resp.data;
+
+    if(outputError.errorMessage != 'None') {
+      return res.status(400).json({ success: false, message: outputError.errorMessage });
+    }
     sendAirtimeToDb( resp.data, false, user.email );
     return res.status(201).json( {success: true, result: resp.data } )
   } else {
@@ -89,7 +98,7 @@ export const sendSingleAirtime = tryCatch(async (req, res) => {
 export const airtimeCallback = tryCatch(async (req, res) => {
   const { status, requestId } = req.body
 
-  const sql = 'UPDATE dtree_airtime_received SET status = $1 WHERE request_id = $2'
+  const sql = 'UPDATE airtime_received SET status = $1 WHERE request_id = $2'
     const values = [status, requestId];
 
     await connect.query( sql, values )
@@ -121,7 +130,7 @@ const sendAirtimeToDb = async(respData, isSingle, user) => {
  
       try {
       const sql = 'INSERT INTO airtime_main ( total_amount, total_discount, error_message, connect_date, user_email ) VALUES ( $1, $2, $3, $4, $5 ) RETURNING *';
-      const sql_received = 'INSERT INTO airtime_received ( amount, discount, error_message, phone_number, request_id, status, connect_id_main, is_single_airtime, user_email  ) VALUES( $1, $2, $3, $4, $5, $6, $7, $8, $9 ) RETURNING *';
+      const sql_received = 'INSERT INTO airtime_received ( amount, discount, error_message, phone_number, request_id, status, connect_id_main, is_single, user_email  ) VALUES( $1, $2, $3, $4, $5, $6, $7, $8, $9 ) RETURNING *';
       const values = [  totalAmount, totalDiscount, errorMessage, datestr, user ]
       
 
@@ -139,7 +148,7 @@ const sendAirtimeToDb = async(respData, isSingle, user) => {
 
      //insert into balance 
      if(errorMessage === 'None') {
-      const balance_object = await  getLastRecord();
+      const balance_object = await  getLastRecord(user);
       const current_balance_spent = balance_object.balance_spent;
       const current_balance = parseInt(balance_object.balance);
       const username = balance_object.user_email;

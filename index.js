@@ -36,11 +36,15 @@ app.use('/api/airtime', routerAirtime);
 app.use('/api/message', routerMessage);
 
 
-const port = 5000;
+const port = 5001;
 
 app.get('/api', (req, res) => {
   
   res.status(200).json( {user: 'Login successful'} )
+});
+
+app.get('/', (req, res) => {
+  res.status(200).json({user: 'Gadiel'});
 })
 
 
