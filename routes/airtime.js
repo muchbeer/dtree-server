@@ -3,7 +3,7 @@ import { airtimeCallback, getAirtime, getAllAirtimes, sendSingleAirtime, uploadA
 
 const routerAirtime = Router();
 
-routerAirtime.get('/', getAirtime);
+routerAirtime.post('/', getAirtime);
 routerAirtime.post('/received', getAllAirtimes);
 routerAirtime.post('/upload', uploadAirtimes);
 routerAirtime.post('/sendone', sendSingleAirtime);

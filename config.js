@@ -15,8 +15,16 @@ const pool = new Pool({
   ssl: true
 });
 
+const pool_local = new Pool({
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  database: process.env.DB_DATABASE,
+  password: process.env.DB_PASSWORD,
+  port: 5432
+});
+
 const connect = 
-   { query: (text, params) => pool.query(text, params) } 
+   { query: (text, params) => pool_local.query(text, params) } 
  
 
 export default connect;
