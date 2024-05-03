@@ -58,8 +58,12 @@ export const uploadAirtimes = tryCatch(async (req, res) => {
     });
 
   if(resp.data) {
-    console.log('The data received is : ' + resp.data);
-    console.log('The data received jsonfy: ' + JSON.stringify(resp.data));
+    const outputError = resp.data;
+
+    if(outputError.errorMessage != 'None') {
+      return res.status(400).json({ success: false, message: outputError.errorMessage });
+    }
+
     sendAirtimeToDb(resp.data, false);
     return res.status(201).json( {success: true, result: resp.data } )
   } else {
