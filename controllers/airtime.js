@@ -63,7 +63,13 @@ export const uploadAirtimes = tryCatch(async (req, res) => {
     });
 
   if(resp.data) {
-    sendAirtimeToDb(resp.data, false);
+
+    const outputError = resp.data;
+
+    if(outputError.errorMessage != 'None') {
+      return res.status(400).json({ success: false, message: outputError.errorMessage });
+    }
+    sendAirtimeToDb( resp.data, false, user.email );
     return res.status(201).json( {success: true, result: resp.data } )
   } else {
     return res.status(400).json( {success: false, message: 'Failed to submit the file'} )
