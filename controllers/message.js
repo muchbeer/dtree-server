@@ -13,7 +13,7 @@ const messageApi = africasTalking.SMS;
 
 export const getMessage = tryCatch(async (req, res ) => {
     const { user } = req.body;
-    //const sql = 'SELECT * FROM message_main ORDER BY id desc';
+   
     const user_sql = 'SELECT * FROM dtree_users JOIN message_main ON dtree_users.email = message_main.user_email WHERE message_main.user_email = $1 ORDER by message_main.id desc';
     const values = [ user.email ];
 
@@ -90,6 +90,36 @@ export const sendSingleMessage = tryCatch(async (req, res) => {
         }); 
   });
 
+export const mapSenderID = tryCatch(async (req, res) => {
+    const { sid, email } = req.body;
+
+    const sql_sid = 'INSERT INTO message_sid ( sender_id, user_email  ) VALUES ( $1, $2 ) RETURNING *';
+    const values_sid = [sid, email];
+
+    const result_message_sid = await connect.query(sql_sid, values_sid)
+    const response_sid = result_message_sid.rows[0];
+
+    return res.status(201).json({ success: true, result: response_sid });
+    
+});
+
+export const viewUserSenderIDs = tryCatch(async (req, res) => {
+  const sid_sql = 'SELECT sender_id FROM  message_sid WHERE user_email = $1';
+   
+        
+  const { user } = req.body;
+  const sid_values =  [ user ];
+
+  await connect.query( sid_sql, sid_values )
+   .then( result_sid => {
+    const viewsids = result_sid.rows.map( items => items.sender_id );
+    return res.status(200).json( { success: true, result: viewsids });
+   })
+   .catch(ex => {
+    return res.status(202).json( {success: false, message: ex.message}  );
+   });
+});
+
 export const messageCallback = tryCatch(async (req, res) => {
     const { status, id , networkCode } = req.body;
     const convertMNO = convertNetworkCode(networkCode);
@@ -104,6 +134,8 @@ export const messageCallback = tryCatch(async (req, res) => {
       });
   
   });
+
+
 
 const sendBulkSMSToDb = async(respData, isSingle, userMessage, user) => {
   const { SMSMessageData }  = respData
@@ -125,7 +157,7 @@ const sendBulkSMSToDb = async(respData, isSingle, userMessage, user) => {
 
     const result_message_main = await connect.query(sql, values)
     const main_id = result_message_main.rows[0].id;
-    console.log('date received is : ' + main_id);
+    //console.log('date received is : ' + main_id);
 
     recipients.forEach( async( message ) => {
 

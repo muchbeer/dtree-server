@@ -17,9 +17,8 @@ const airtime = africasTalking.AIRTIME;
 export const getAirtime = tryCatch(async (req, res) => {
   const { user } = req.body;
    
-   // const sql = 'SELECT * FROM dtree_airtime_main ORDER BY id desc';
+
     const user_sql = 'SELECT * FROM dtree_users JOIN airtime_main ON dtree_users.email = airtime_main.user_email WHERE airtime_main.user_email = $1 ORDER BY airtime_main.id desc';
-  //  const user_sql = 'SELECT * FROM dtree_users JOIN message_main ON dtree_users.email = message_main.user_email WHERE message_main.user_email = $1';
 
     const values = [ user.email ]
     const result_view_airtime = await connect.query( user_sql, values );
@@ -78,6 +77,7 @@ export const uploadAirtimes = tryCatch(async (req, res) => {
 });
 
 export const sendSingleAirtime = tryCatch(async (req, res) => {
+
 
   const { data, user } = req.body;
     
