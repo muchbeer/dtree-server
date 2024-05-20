@@ -6,6 +6,7 @@ import bodyParser from "body-parser";
 import routerBalance from "./routes/balance.js";
 import routerAirtime from "./routes/airtime.js";
 import routerMessage from './routes/message.js';
+import routerContact from "./routes/contact.js";
 
 
 
@@ -34,6 +35,7 @@ app.use('/api/auth', router);
 app.use('/api/balance', routerBalance);
 app.use('/api/airtime', routerAirtime);
 app.use('/api/message', routerMessage);
+app.use('/api/contact', routerContact);
 
 
 const port = 5001;

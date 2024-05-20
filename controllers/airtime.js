@@ -95,6 +95,16 @@ export const sendSingleAirtime = tryCatch(async (req, res) => {
         }); 
 });
 
+export const insertAndroidevice = tryCatch(async (req, res) => {
+    const { phoneName, amount, status, user, errorMessage, requestId, } = req.body;
+
+    const sql_received = 'INSERT INTO airtime_received ( amount, discount, error_message, phone_number, request_id, status, connect_id_main, is_single, user_email  ) VALUES( $1, $2, $3, $4, $5, $6, $7, $8, $9 ) RETURNING *';
+    const values_airtime = [ amount, '0x', errorMessage, phoneName, requestId, status, 47, true, user];
+
+    await connect.query( sql_received, values_airtime ).then( res.status(201).json({ success: true })
+    ).catch(ex => res.status(400).json({ success: false, message: ex.message }))
+});
+
 export const airtimeCallback = tryCatch(async (req, res) => {
   const { status, requestId } = req.body
 

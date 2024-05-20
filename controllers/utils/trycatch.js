@@ -4,7 +4,7 @@ const tryCatch = (controller) => {
         await controller(req, res);
       } catch (error) {
         console.log(error);
-        res.status(500).json({ success: false, message: 'User failed to register! try again later',
+        res.status(500).json({ success: false, message: 'Please check your network and try again',
         });
       }
     };

@@ -25,6 +25,6 @@ const pool_local = new Pool({
 
 const connect = 
    { query: (text, params) => pool.query(text, params) } 
- 
+
 
 export default connect;
