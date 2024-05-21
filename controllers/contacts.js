@@ -20,8 +20,6 @@ export const getAllContacts = tryCatch(async (req, res ) => {
 export const getSelectedNames = tryCatch(async (req, res ) => {
     const { user } = req.body;
 
-    //const contact_sql = 'SELECT names, id, phone_number  FROM contacts WHERE user_email = $1';
-    //const contact_sql = 'SELECT names, id, phone_number, tag  FROM contacts WHERE (user_email = $1) AND (names ILIKE %$2% OR tag ILIKE %$3%)';
     const contact_sql = 'SELECT names, id, phone_number, tag  FROM contacts WHERE user_email = $1';
 
     const values = [ user];
