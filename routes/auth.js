@@ -1,7 +1,7 @@
 import express from "express";
 
 import * as dotenv from 'dotenv';
-import { enableAirtime, enableUsers, getUsers, login, register } from "../controllers/user.js";
+import { enableAirtime, enableUsers, getAndroidUsers, getUsers, login, register } from "../controllers/user.js";
 
 
 dotenv.config();
@@ -27,6 +27,7 @@ const datestr = gmtPlus3Date.toString().slice(0, -37);
 router.post('/register', register);
 router.post('/login', login);
 router.get('/users', getUsers);
+router.get('/anduser', getAndroidUsers);
 router.post('/enable', enableAirtime);
 router.post('/activate', enableUsers);
 

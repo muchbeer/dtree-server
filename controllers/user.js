@@ -67,6 +67,16 @@ export const getUsers = tryCatch(async (req, res) => {
     return res.status(200).json({ success: true , result: fetch_data });
   });
 
+export const getAndroidUsers = tryCatch (async (req, res) => {
+
+    const sql = 'SELECT * FROM dtree_users ORDER BY id desc';
+
+    const result_view_users = await connect.query( sql );
+    const fetch_data = result_view_users.rows;
+
+    return res.status(200).json({ fetch_data });
+});
+
 export const enableAirtime = tryCatch(async (req, res) => {
  
         const {id, enable_airtime } = req.body;
