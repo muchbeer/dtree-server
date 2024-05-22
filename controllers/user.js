@@ -64,13 +64,13 @@ export const getUsers = tryCatch(async (req, res) => {
     const result_view_users = await connect.query( sql );
     const fetch_data = result_view_users.rows;
 
-    return res.status(200).json( {success: true , result: fetch_data} );
+    return res.status(200).json({ success: true , result: fetch_data });
   });
 
 export const enableAirtime = tryCatch(async (req, res) => {
  
         const {id, enable_airtime } = req.body;
-        
+    
 
         const sql_update = 'UPDATE dtree_users SET enable_airtime = $1 WHERE id = $2 RETURNING *'
         const values_update = [ enable_airtime, id ];
@@ -80,8 +80,20 @@ export const enableAirtime = tryCatch(async (req, res) => {
                     return res.status(201).json( {success: true, result: result_updated.rows[0]})
                 }).catch(ex => {
                     return res.status(409).json( {success: false, message: ex.message} )
-                })
+                });
         
-       
+}); 
 
-})
+export const enableUsers = tryCatch( async( req, res ) => {
+    const { user, enable_airtime } = req.body;
+
+    const sql_update_user = 'UPDATE dtree_users SET enable_airtime = $1 WHERE email = $2 RETURNING *';
+    const values_user = [ enable_airtime, user ];  
+
+    await connect.query( sql_update_user, values_user )
+        .then( user_result => {
+            return res.status(201).json({ success: true, result: user_result.rows[0] })
+        }).catch(ex => {
+            return res.status(409).json( {success: false, message: ex.message} )
+        });
+});

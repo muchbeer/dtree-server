@@ -60,12 +60,16 @@ export const uploadMessages = tryCatch(async (req, res) => {
           'apiKey' : process.env.AT_API_KEY
         }
       });
-  
-    if(resp.data) {
+
+    const { SMSMessageData }  = resp.data;
+    if(SMSMessageData) {
+      if( SMSMessageData.Message === 'InvalidSenderId' ) {
+          return res.status(400).json({ success: false, message: 'Sender ID is not mapped internally' });
+      }
       sendBulkSMSToDb( resp.data, false, message, user.email );
-      return res.status(201).json( {success: true, result: resp.data } )
+      return res.status(201).json({ success: true, result: resp.data })
     } else {
-      return res.status(400).json( {success: false, message: 'Failed to submit the file'} )
+      return res.status(400).json({ success: false, message: 'Failed to submit the file' });
     }
     
   });
@@ -135,10 +139,7 @@ export const messageCallback = tryCatch(async (req, res) => {
   
   });
 
-
-
 const sendBulkSMSToDb = async(respData, isSingle, userMessage, user) => {
-  const { SMSMessageData }  = respData
 
   const utcDate = new Date();
 
@@ -147,17 +148,16 @@ const sendBulkSMSToDb = async(respData, isSingle, userMessage, user) => {
   const gmtPlus3Date = new Date(utcDate.getTime() + offsetMinutes * 60000);
 
   const datestr = gmtPlus3Date.toString().slice(0, -37); 
-  const recipients = SMSMessageData.Recipients;
+  const recipients = respData.Recipients;
 
   try {
     const sql = 'INSERT INTO message_main ( description, connect_date, user_message, user_email  ) VALUES ( $1, $2, $3, $4 ) RETURNING *';
     const sql_received = 'INSERT INTO message_received (  phone_number, message_cost, message_id, status, status_code, main_id, is_single_message, user_email  ) VALUES( $1, $2, $3, $4, $5, $6, $7, $8) RETURNING *';
-    const values = [  SMSMessageData.Message, datestr, userMessage, user ];
+    const values = [  respData.Message, datestr, userMessage, user ];
 
 
     const result_message_main = await connect.query(sql, values)
     const main_id = result_message_main.rows[0].id;
-    //console.log('date received is : ' + main_id);
 
     recipients.forEach( async( message ) => {
 
@@ -165,7 +165,7 @@ const sendBulkSMSToDb = async(respData, isSingle, userMessage, user) => {
 
     await connect.query(sql_received, values_message);
 
-});
+    });
 
 //insert into balance 
 if( recipients.length > 0 ) {
@@ -173,7 +173,6 @@ if( recipients.length > 0 ) {
   const current_balance_spent = balance_object.balance_spent;
   const current_balance = parseInt(balance_object.balance);
   const username = balance_object.user_email;
-  // const deductAmount = totalAmount.replace('TZS ', '');
   const deductAmount = 25 * recipients.length;
    const updated_balance = current_balance - parseInt(deductAmount); 
    const values_balance_updated = [ updated_balance.toString(), deductAmount, username, current_balance_spent ]; 
