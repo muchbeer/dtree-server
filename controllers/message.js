@@ -42,7 +42,7 @@ export const getAllMessages = tryCatch(async (req, res) => {
 
 export const uploadMessages = tryCatch(async (req, res) => {
 
-    const { phoneNumbers, sid, message, user } = req.body;
+    const { phoneNumbers, sid, message, user, tag } = req.body;
       
     const data =   {
         enqueue: true,
@@ -66,7 +66,7 @@ export const uploadMessages = tryCatch(async (req, res) => {
       if( SMSMessageData.Message === 'InvalidSenderId' ) {
           return res.status(400).json({ success: false, message: 'Sender ID is not mapped internally' });
       }
-      sendBulkSMSToDb( SMSMessageData , false, message, user.email );
+      sendBulkSMSToDb( SMSMessageData , false, message, user.email, tag );
       return res.status(201).json({ success: true, result: resp.data })
     } else {
       return res.status(400).json({ success: false, message: 'Failed to submit the file' });
@@ -139,7 +139,7 @@ export const messageCallback = tryCatch(async (req, res) => {
   
   });
 
-const sendBulkSMSToDb = async(respData, isSingle, userMessage, user) => {
+const sendBulkSMSToDb = async( respData, isSingle, userMessage, user, tag ) => {
 
   const utcDate = new Date();
 
@@ -151,9 +151,9 @@ const sendBulkSMSToDb = async(respData, isSingle, userMessage, user) => {
   const recipients = respData.Recipients;
 
   try {
-    const sql = 'INSERT INTO message_main ( description, connect_date, user_message, user_email  ) VALUES ( $1, $2, $3, $4 ) RETURNING *';
+    const sql = 'INSERT INTO message_main ( description, connect_date, user_message, user_email, tag  ) VALUES ( $1, $2, $3, $4, $5 ) RETURNING *';
     const sql_received = 'INSERT INTO message_received (  phone_number, message_cost, message_id, status, status_code, main_id, is_single_message, user_email  ) VALUES( $1, $2, $3, $4, $5, $6, $7, $8) RETURNING *';
-    const values = [  respData.Message, datestr, userMessage, user ];
+    const values = [  respData.Message, datestr, userMessage, user, tag ];
 
 
     const result_message_main = await connect.query(sql, values)
@@ -178,11 +178,10 @@ if( recipients.length > 0 ) {
    const values_balance_updated = [ updated_balance.toString(), deductAmount, username, current_balance_spent ]; 
    const sql_new_balance = 'INSERT INTO airtime_balance ( balance, deduct, user_email, balance_spent ) VALUES ( $1, $2, $3, $4 ) RETURNING *';
    await connect.query( sql_new_balance, values_balance_updated );
-   //console.log('The airtime was sent and updated balance is : ' + JSON.stringify(balance_response));
 
  }
 
 } catch (error) {
-    console.log('This saving data to database brought error and it is : '+ error);  
+    console.log('This saving data to database brought an '+ error);  
 }
   };
