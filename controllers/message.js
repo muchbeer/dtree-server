@@ -151,9 +151,14 @@ const sendBulkSMSToDb = async( respData, isSingle, userMessage, user, tag ) => {
   const recipients = respData.Recipients;
 
   try {
-    const sql = 'INSERT INTO message_main ( description, connect_date, user_message, user_email, tag  ) VALUES ( $1, $2, $3, $4, $5 ) RETURNING *';
-    const sql_received = 'INSERT INTO message_received (  phone_number, message_cost, message_id, status, status_code, main_id, is_single_message, user_email  ) VALUES( $1, $2, $3, $4, $5, $6, $7, $8) RETURNING *';
-    const values = [  respData.Message, datestr, userMessage, user, tag ];
+    const totalSum = recipients.reduce((accumulator, message) => {
+      return accumulator + message.messageParts ;
+    }, 0);
+
+    const sql = 'INSERT INTO message_main ( description, connect_date, user_message, user_email, tag, total_message  ) VALUES ( $1, $2, $3, $4, $5, $6 ) RETURNING *';
+    const sql_received = 'INSERT INTO message_received (  phone_number, message_cost, message_id, status, status_code, main_id, is_single_message, user_email, message_parts  ) VALUES( $1, $2, $3, $4, $5, $6, $7, $8, $9) RETURNING *';
+    const values = [  respData.Message, datestr, userMessage, user, tag, totalSum ];
+
 
 
     const result_message_main = await connect.query(sql, values)
@@ -161,19 +166,19 @@ const sendBulkSMSToDb = async( respData, isSingle, userMessage, user, tag ) => {
 
     recipients.forEach( async( message ) => {
 
-    const values_message = [ message.number, message.cost, message.messageId, message.status, message.statusCode, main_id, isSingle, user];
+    const values_message = [ message.number, message.cost, message.messageId, message.status, message.statusCode, main_id, isSingle, user, message.messagePart];
 
     await connect.query(sql_received, values_message);
-
     });
 
 //insert into balance 
 if( recipients.length > 0 ) {
+
   const balance_object = await  getLastRecord(user);
   const current_balance_spent = balance_object.balance_spent;
   const current_balance = parseInt(balance_object.balance);
   const username = balance_object.user_email;
-  const deductAmount = 25 * recipients.length;
+  const deductAmount = 25 * totalSum;
    const updated_balance = current_balance - parseInt(deductAmount); 
    const values_balance_updated = [ updated_balance.toString(), deductAmount, username, current_balance_spent ]; 
    const sql_new_balance = 'INSERT INTO airtime_balance ( balance, deduct, user_email, balance_spent ) VALUES ( $1, $2, $3, $4 ) RETURNING *';
