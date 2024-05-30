@@ -5,9 +5,11 @@ import tryCatch from "./utils/trycatch.js";
 
 export const register = tryCatch(async (req, res) => {
     const { name, lastname, email, password } = req.body; 
+    const default_topup = '200';
 
     const sql = 'INSERT INTO dtree_users (first_name, last_name, email, pass, enable_airtime, is_register) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
- 
+    const sql_balance = 'INSERT INTO airtime_balance(balance, balance_spent, user_email) VALUES($1, $2, $3)';
+    const values_balance = [default_topup, default_topup, email];
     bcrypt.hash(password.toString(), parseInt(process.env.HASH_SALT), async (err, hash) => {
         if(err) {
             console.log(err);
@@ -17,6 +19,7 @@ export const register = tryCatch(async (req, res) => {
    
          await connect.query(sql, values)
         .then((result)=> {
+            connect.query(sql_balance, values_balance);
            return res.status(201).json( {success: true, result: result.rows[0] });  
         })
         .catch(ex => {
@@ -107,7 +110,7 @@ export const enableUsers = tryCatch( async( req, res ) => {
             if(user_result.rows[0]) {
                 return res.status(201).json({ success: true, result: user_result.rows[0] })
             } else {
-                return res.status(204).json({ success: false, message: 'No user found in the database' });
+                return res.status(206).json({ success: false, message: 'No user found in the database' });
             }
             
         }).catch(ex => {
