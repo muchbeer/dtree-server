@@ -77,6 +77,7 @@ export const getAndroidUsers = tryCatch (async (req, res) => {
     return res.status(200).json({ fetch_data });
 });
 
+//enable airtime user
 export const enableAirtime = tryCatch(async (req, res) => {
  
         const {id, enable_airtime } = req.body;
@@ -102,7 +103,13 @@ export const enableUsers = tryCatch( async( req, res ) => {
 
     await connect.query( sql_update_user, values_user )
         .then( user_result => {
-            return res.status(201).json({ success: true, result: user_result.rows[0] })
+            console.log('The user result is now : ' + user_result.rows[0]);
+            if(user_result.rows[0]) {
+                return res.status(201).json({ success: true, result: user_result.rows[0] })
+            } else {
+                return res.status(204).json({ success: false, message: 'No user found in the database' });
+            }
+            
         }).catch(ex => {
             return res.status(409).json( {success: false, message: ex.message} )
         });
