@@ -23,7 +23,7 @@ const datestr = gmtPlus3Date.toString().slice(0, -37);
 
     return res.json({ isLogged: true, time: datestr });  
 });
-//work on app  ss
+
 router.post('/register', register);
 router.post('/login', login);
 router.get('/users', getUsers);

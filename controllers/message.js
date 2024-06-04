@@ -10,7 +10,6 @@ const africasTalking = AfricasTalking(credentials);
   
 const messageApi = africasTalking.SMS;
 
-
 export const getMessage = tryCatch(async (req, res ) => {
     const { user } = req.body;
    
@@ -103,7 +102,13 @@ export const mapSenderID = tryCatch(async (req, res) => {
     const result_message_sid = await connect.query(sql_sid, values_sid)
     const response_sid = result_message_sid.rows[0];
 
-    return res.status(201).json({ success: true, result: response_sid });
+    if(response_sid) {
+      return res.status(201).json({ success: true, result: response_sid });
+    } else {
+      return res.status(206).json({ success: false })
+    }
+
+    
     
 });
 

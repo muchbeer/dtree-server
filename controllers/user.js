@@ -18,8 +18,11 @@ export const register = tryCatch(async (req, res) => {
         const values = [ name, lastname, email, hash, false, true ]
    
          await connect.query(sql, values)
-        .then((result)=> {
-            connect.query(sql_balance, values_balance);
+        .then( async(result)=> {
+          await  connect.query(sql_balance, values_balance).then(respons => {
+            console.log('Top up done ');
+          })
+
            return res.status(201).json( {success: true, result: result.rows[0] });  
         })
         .catch(ex => {

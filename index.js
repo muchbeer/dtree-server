@@ -7,6 +7,7 @@ import routerBalance from "./routes/balance.js";
 import routerAirtime from "./routes/airtime.js";
 import routerMessage from './routes/message.js';
 import routerContact from "./routes/contact.js";
+import routerAirtelMoney from "./routes/airtelmoney.js";
 
 
 dotenv.config();
@@ -35,6 +36,7 @@ app.use('/api/balance', routerBalance);
 app.use('/api/airtime', routerAirtime);
 app.use('/api/message', routerMessage);
 app.use('/api/contact', routerContact);
+app.use('/api/airtelmoney', routerAirtelMoney);
 
 
 const port = 5001;

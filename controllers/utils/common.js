@@ -29,3 +29,9 @@ export const sumIteminArray = (arr) => {
     }
     return total;
   }
+
+export const generateTransactionId = () => {
+    const timestamp = Date.now(); // Current timestamp in milliseconds
+    const randomNum = Math.floor(Math.random() * 1000000); // A random number between 0 and 999999
+    return `myk_${timestamp}_${randomNum}`;
+}
