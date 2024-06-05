@@ -15,7 +15,7 @@ export const sendairtelmoney = tryCatch (async(req, res) => {
         'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImhvbWVAZ21haWwuY29tIiwicGFzc3dvcmQiOiJob21lMTIzIiwiaWF0IjoxNzE3NTg5MTc3LCJleHAiOjE3MTc1OTI3Nzd9.tGp7K1-p_1sniEKa9KRJS7mEwWkrUZsWcmRZZEQZD-s',
       };
 
-    inputBody = {
+    const inputBody = {
         'payee': {
             'msisdn': phonenumber,
             'wallet_type': 'NORMAL'
