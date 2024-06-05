@@ -4,6 +4,31 @@ import jwt from 'jsonwebtoken';
 import { stringify, parse } from 'flatted';
 import axios from 'axios';
 
+export const generateToken = tryCatch (async( req, res ) => {
+    
+    const postData = {
+        client_id: process.env.AIRTEL_CLIENT_ID,
+        client_secret: process.env.AIRTEL_SECRET_KEY,
+        grant_type: 'mayaki_disburse'
+        }
+
+    const tokenGenerate = await axios.post('https://openapiuat.airtel.africa/auth/oauth2/token' , postData, 
+        { headers: {
+            'Content-Type': 'application/json',
+            'Accept': '*/*',
+          }
+    });
+
+    const respons = tokenGenerate.data
+    if(respons) {
+    console.log('The body is now : ' + respons);
+    console.log('The JSON TOKEN is : ' + JSON.stringify(respons));
+    return res.status(201).json({ success:true, token: respons })
+    }else {
+    return res.status(400).json({ success: false, message: 'Failed to connect to airtel' })
+  }
+});
+
 export const sendMoneyUseAxios = tryCatch (async( req, res ) => {
     const { phonenumber, amount } = req.body
 
@@ -21,7 +46,7 @@ export const sendMoneyUseAxios = tryCatch (async( req, res ) => {
         }
     }
     const resp = await axios.post('https://openapiuat.airtel.africa/standard/v3/disbursements', data, 
-        {headers: {
+        { headers: {
             'Content-Type': 'application/json',
             'Accept': '*/*',
             'X-Country' : 'TZ',
