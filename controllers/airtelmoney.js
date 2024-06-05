@@ -38,8 +38,11 @@ export const sendairtelmoney = tryCatch (async(req, res) => {
       }).then((response) => {
             console.log('Response is now : ' + JSON.stringify(response))
             console.log('This is the body : ' + JSON.stringify(response.body))
-            return res.json(response);
-      });
+            return res.json();
+      }).then(body => {
+            console.log('Now receive the body : ' + body)
+            console.log('Stringify : ' + JSON.stringify(body))
+      })
           
 });
 
