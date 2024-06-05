@@ -20,9 +20,8 @@ export const sendairtelmoney = tryCatch (async(req, res) => {
             'msisdn': phonenumber,
             'wallet_type': 'NORMAL'
         },
-        'reference': generateRefreshToken(),
-       // 'pin': process.env.AIRTEL_PIN,
-       'pin': "dR5tAaok6j+QqVJm4dy3PCc9fEz0z2gNTwsBvb9WmSJ/4Ier+vnH4zGlKunVg5nUPL/CMgkMjtvrU5dJWnKvHV4ur62Pu6VthNXFJYK6PDzvYXPxRWJ1qHiEQ6Y2MzXP0eKOII0agJ7hcYcuH9kQ0jctSpc0sb48lYcVt6WTwW4=",
+        'reference': generateTransactionId(),
+        'pin': process.env.AIRTEL_PIN,
         'transaction': {
             'amount': amount,
             'id': generateTransactionId(),
