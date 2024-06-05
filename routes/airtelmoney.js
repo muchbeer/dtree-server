@@ -1,10 +1,10 @@
 import { Router } from "express";
 
-import { sendairtelmoney, verifyToken } from '../controllers/airtelmoney.js';
+import { sendMoneyUseAxios, sendairtelmoney, verifyToken } from '../controllers/airtelmoney.js';
 
 const routerAirtelMoney = Router();
 
 
-routerAirtelMoney.post('/disburse', verifyToken, sendairtelmoney );
+routerAirtelMoney.post('/disburse', verifyToken, sendMoneyUseAxios );
 
 export default routerAirtelMoney;
