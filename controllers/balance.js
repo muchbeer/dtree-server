@@ -7,12 +7,9 @@ export const getBalance = tryCatch(async (req, res) => {
 
     const { user } = req.body
     const retrieve_last_record = await getLastRecord(user.email);
-    console.log('The out received isx : ' + retrieve_last_record);
     if(retrieve_last_record == "noUser") {
-      console.log('Enter the false zonex')
       return res.status(206).json({ success: false });
     } else {
-      console.log('The input is really now');
       return res.status(200).json({ success: true, result: retrieve_last_record });
     }
 

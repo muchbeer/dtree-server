@@ -2,9 +2,10 @@
 import bcrypt from "bcryptjs";
 import connect from "../config.js";
 import tryCatch from "./utils/trycatch.js";
+import jwt from 'jsonwebtoken';
 
 export const register = tryCatch(async (req, res) => {
-    const { name, lastname, email, password } = req.body; 
+    const { name, lastname, email, password } = req.body;
     const default_topup = '200';
 
     const sql = 'INSERT INTO dtree_users (first_name, last_name, email, pass, enable_airtime, is_register) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
@@ -23,10 +24,10 @@ export const register = tryCatch(async (req, res) => {
             console.log('Top up done ');
           })
 
-           return res.status(201).json( {success: true, result: result.rows[0] });  
+           return res.status(201).json({ success: true, result: result.rows[0] });  
         })
         .catch(ex => {
-           return res.status(409).json( {success: false, message: ex.message} )
+           return res.status(409).json({ success: false, message: ex.message })
         });
  
     });
@@ -37,6 +38,10 @@ export const login = tryCatch(async (req, res) => {
      const sql = "SELECT * FROM dtree_users WHERE LOWER(email) = $1";
         const { email, password } = req.body;
         const values = [email];
+        const tokenValue = { email: email, password: password }
+
+        const token = generateAccessToken(tokenValue);
+        console.log('Current token is now : ' + token);
 
         const result = await connect.query(sql, values);
         const fetch_data = result.rows
@@ -50,7 +55,7 @@ export const login = tryCatch(async (req, res) => {
                         return res.status(401).json({ success: false, message: 'This account is disabled! Try to contact the admin',});
                     }
                         
-                  return  res.status(200).json({success: true, result: fetch_data[0]} );
+                  return  res.status(200).json({success: true, result: fetch_data[0], token: token});
                
                 } else {
                    
@@ -120,3 +125,8 @@ export const enableUsers = tryCatch( async( req, res ) => {
             return res.status(409).json( {success: false, message: ex.message} )
         });
 });
+
+
+const generateAccessToken = (inputBody) => {
+    return jwt.sign(inputBody, process.env.AIRTEL_SECRET_KEY, { expiresIn: '1h' });
+  };
