@@ -32,6 +32,23 @@ export const generateToken = tryCatch (async( req, res ) => {
 export const sendMoneyUseAxios = tryCatch (async( req, res ) => {
     const { phonenumber, amount } = req.body
 
+    const postData = {
+        client_id: process.env.AIRTEL_CLIENT_ID,
+        client_secret: process.env.AIRTEL_SECRET_KEY,
+        grant_type: process.env.AIRTEL_PIN
+        }
+
+    const tokenGenerate = await axios.post('https://openapiuat.airtel.africa/auth/oauth2/token' , postData, 
+        { headers: {
+            'Content-Type': 'application/json',
+            'Accept': '*/*',
+          }
+    });
+
+    const tken = tokenGenerate.data
+    console.log('Token is now : ' + tken);
+    console.log('Token JSON is ' + JSON.stringify(tken))
+
     const data = {
         'payee': {
             'msisdn': phonenumber,
@@ -51,7 +68,8 @@ export const sendMoneyUseAxios = tryCatch (async( req, res ) => {
             'Accept': '*/*',
             'X-Country' : 'TZ',
             'X-Currency' : 'TZS',
-            'Authorization' : 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImhvbWVAZ21haWwuY29tIiwicGFzc3dvcmQiOiJob21lMTIzIiwiaWF0IjoxNzE3NTk2NTMxLCJleHAiOjE3MTc2Mjg5MzF9.Kd6YuDQX7uWoCNdsQ4k263jG6C9t2Uc2HFK47Sayeks'
+            'Authorization' : 'Bearer ' + tken
+           // 'Authorization' : 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImhvbWVAZ21haWwuY29tIiwicGFzc3dvcmQiOiJob21lMTIzIiwiaWF0IjoxNzE3NTk2NTMxLCJleHAiOjE3MTc2Mjg5MzF9.Kd6YuDQX7uWoCNdsQ4k263jG6C9t2Uc2HFK47Sayeks'
       }
     });
 
