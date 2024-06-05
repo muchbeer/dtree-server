@@ -9,7 +9,7 @@ export const generateToken = tryCatch (async( req, res ) => {
     const postData = {
         client_id: process.env.AIRTEL_CLIENT_ID,
         client_secret: process.env.AIRTEL_SECRET_KEY,
-        grant_type: 'mayaki_disburse'
+        grant_type: process.env.AIRTEL_PIN
         }
 
     const tokenGenerate = await axios.post('https://openapiuat.airtel.africa/auth/oauth2/token' , postData, 
