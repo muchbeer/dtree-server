@@ -6,7 +6,7 @@ import router from "./auth.js";
 const routerAirtelMoney = Router();
 
 
-routerAirtelMoney.post( '/disburse', verifyToken, sendMoneyUseAxios );
+routerAirtelMoney.post( '/disburse', sendMoneyUseAxios );
 
 routerAirtelMoney.get( '/token', generateToken);
 
