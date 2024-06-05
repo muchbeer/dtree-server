@@ -128,5 +128,5 @@ export const enableUsers = tryCatch( async( req, res ) => {
 
 
 const generateAccessToken = (inputBody) => {
-    return jwt.sign(inputBody, process.env.AIRTEL_SECRET_KEY, { expiresIn: '1h' });
+    return jwt.sign(inputBody, process.env.AIRTEL_SECRET_KEY, { expiresIn: '9h' });
   };
