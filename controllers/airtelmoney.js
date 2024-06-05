@@ -1,7 +1,7 @@
 import { generateTransactionId } from './utils/common.js';
 import tryCatch from './utils/trycatch.js'
 import jwt from 'jsonwebtoken';
-
+import { stringify, parse } from 'flatted';
 
 export const sendairtelmoney = tryCatch (async(req, res) => {
 
@@ -40,8 +40,8 @@ export const sendairtelmoney = tryCatch (async(req, res) => {
             console.log('This is the body : ' + JSON.stringify(response.body))
             return res.json();
       }).then(body => {
-            console.log('Now receive the body : ' + body)
-            console.log('Stringify : ' + JSON.stringify(body))
+            console.log('Now receive the body : ' + JSON.stringify(body.status) )
+           // console.log('Stringify : ' + JSON.stringify(body))
       })
           
 });
