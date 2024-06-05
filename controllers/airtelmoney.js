@@ -7,7 +7,7 @@ import axios from 'axios';
 export const sendMoneyUseAxios = tryCatch (async( req, res ) => {
     const { phonenumber, amount } = req.body
 
-    data = {
+    const data = {
         'payee': {
             'msisdn': phonenumber,
             'wallet_type': 'NORMAL'
