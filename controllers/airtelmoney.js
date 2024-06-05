@@ -12,7 +12,7 @@ export const sendairtelmoney = tryCatch (async(req, res) => {
         'Accept': '*/*',
         'X-Country': 'TZ',
         'X-Currency': 'TZS',
-        'Authorization': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImhvbWVAZ21haWwuY29tIiwicGFzc3dvcmQiOiJob21lMTIzIiwiaWF0IjoxNzE3NTg5MTc3LCJleHAiOjE3MTc1OTI3Nzd9.tGp7K1-p_1sniEKa9KRJS7mEwWkrUZsWcmRZZEQZD-s',
+        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImhvbWVAZ21haWwuY29tIiwicGFzc3dvcmQiOiJob21lMTIzIiwiaWF0IjoxNzE3NTkyMzQxLCJleHAiOjE3MTc1OTU5NDF9.LMYrIWzXPkXXjGZ11T8QRvMCevBZmCQWZqWY3oBG8C4',
       };
 
     const inputBody = {
@@ -30,12 +30,13 @@ export const sendairtelmoney = tryCatch (async(req, res) => {
     }
 
 
-    fetch('https://openapiuat.airtel.africa/standard/v3/disbursements',{
+    await fetch('https://openapiuat.airtel.africa/standard/v3/disbursements', {
         method: 'POST',
         body: inputBody,
         headers: headers
       }).then((response) => {
             console.log('Response is now : ' + JSON.stringify(response))
+            console.log('This is the body : ' + JSON.stringify(response.body))
             return res.status(201).json(response);
       }).then((body) => {
           console.log(body);
