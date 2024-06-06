@@ -30,7 +30,7 @@ export const generateToken = tryCatch (async( req, res ) => {
 });
 
 export const sendMoneyUseAxios = tryCatch (async( req, res ) => {
-    console.log('This is the new beginning')
+    console.log('The logs are weird now please confirm pity')
     const { phonenumber, amount } = req.body
 
     const postData = {
