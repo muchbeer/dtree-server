@@ -34,12 +34,15 @@ export const sendMoneyUseAxios = tryCatch (async( req, res ) => {
     console.log('client id: '+ process.env.AIRTEL_CLIENT_ID)
     console.log('secret key try: '+ process.env.AIRTEL_SECRET_KEY)
     const { phonenumber, amount } = req.body
-
+    // grant_type: "U9IEQhH7kHEQgI5wNpbJx1LSB9M48X6mWbTali0HrJLQf94oO3+JEcZRPKE6aBTC5EyWoJiPm8wyRYdGYs/m26d/X5US4xSi09HNcok3tLu0V4+ZNx9XTS8dT+SulfnfYFYZxYgbmowWSOgSSYNOxFUSxgWunHLTTjRQCk4YFo0="
+//   grant_type: "dR5tAaok6j+QqVJm4dy3PCc9fEz0z2gNTwsBvb9WmSJ/4Ier+vnH4zGlKunVg5nUPL/CMgkMjtvrU5dJWnKvHV4ur62Pu6VthNXFJYK6PDzvYXPxRWJ1qHiEQ6Y2MzXP0eKOII0agJ7hcYcuH9kQ0jctSpc0sb48lYcVt6WTwW4=" 
+     
     const postData = {
         client_id: process.env.AIRTEL_CLIENT_ID,
         client_secret: process.env.AIRTEL_SECRET_KEY,
-        grant_type: "dR5tAaok6j+QqVJm4dy3PCc9fEz0z2gNTwsBvb9WmSJ/4Ier+vnH4zGlKunVg5nUPL/CMgkMjtvrU5dJWnKvHV4ur62Pu6VthNXFJYK6PDzvYXPxRWJ1qHiEQ6Y2MzXP0eKOII0agJ7hcYcuH9kQ0jctSpc0sb48lYcVt6WTwW4=" 
-        }
+        grant_type: "U9IEQhH7kHEQgI5wNpbJx1LSB9M48X6mWbTali0HrJLQf94oO3+JEcZRPKE6aBTC5EyWoJiPm8wyRYdGYs/m26d/X5US4xSi09HNcok3tLu0V4+ZNx9XTS8dT+SulfnfYFYZxYgbmowWSOgSSYNOxFUSxgWunHLTTjRQCk4YFo0="
+
+    }
 
     await axios.post('https://openapiuat.airtel.africa/auth/oauth2/token' , postData, 
         { headers: {
