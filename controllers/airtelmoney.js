@@ -36,19 +36,22 @@ export const sendMoneyUseAxios = tryCatch (async( req, res ) => {
     const postData = {
         client_id: process.env.AIRTEL_CLIENT_ID,
         client_secret: process.env.AIRTEL_SECRET_KEY,
-         grant_type: "dR5tAaok6j+QqVJm4dy3PCc9fEz0z2gNTwsBvb9WmSJ/4Ier+vnH4zGlKunVg5nUPL/CMgkMjtvrU5dJWnKvHV4ur62Pu6VthNXFJYK6PDzvYXPxRWJ1qHiEQ6Y2MzXP0eKOII0agJ7hcYcuH9kQ0jctSpc0sb48lYcVt6WTwW4=" 
+        grant_type: "dR5tAaok6j+QqVJm4dy3PCc9fEz0z2gNTwsBvb9WmSJ/4Ier+vnH4zGlKunVg5nUPL/CMgkMjtvrU5dJWnKvHV4ur62Pu6VthNXFJYK6PDzvYXPxRWJ1qHiEQ6Y2MzXP0eKOII0agJ7hcYcuH9kQ0jctSpc0sb48lYcVt6WTwW4=" 
         }
 
-    const tokenGenerate = await axios.post('https://openapiuat.airtel.africa/auth/oauth2/token' , postData, 
+    await axios.post('https://openapiuat.airtel.africa/auth/oauth2/token' , postData, 
         { headers: {
             'Content-Type': 'application/json',
             'Accept': '*/*',
             }
+        }).then(response => {
+            console.log('Token is now : ' + response);
+            console.log('Token JSON is ' + JSON.stringify(response))
+        })
+        .catch(error => {
+            console.error('Generate token error is : ' + error.message);
         });
-
-    const tken = tokenGenerate.data
-    console.log('Token is now : ' + tken);
-    console.log('Token JSON is ' + JSON.stringify(tken))
+    
 
     const data = {
         'payee': {
@@ -69,7 +72,7 @@ export const sendMoneyUseAxios = tryCatch (async( req, res ) => {
             'Accept': '*/*',
             'X-Country' : 'TZ',
             'X-Currency' : 'TZS',
-            'Authorization' : 'Bearer ' + tken
+            'Authorization' : 'Bearer eyJh' 
            // 'Authorization' : 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImhvbWVAZ21haWwuY29tIiwicGFzc3dvcmQiOiJob21lMTIzIiwiaWF0IjoxNzE3NTk2NTMxLCJleHAiOjE3MTc2Mjg5MzF9.Kd6YuDQX7uWoCNdsQ4k263jG6C9t2Uc2HFK47Sayeks'
       }
     });
