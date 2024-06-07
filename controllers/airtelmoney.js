@@ -40,29 +40,25 @@ export const sendMoneyUseAxios = tryCatch (async( req, res ) => {
     const postData = {
         client_id: process.env.AIRTEL_CLIENT_ID,
         client_secret: process.env.AIRTEL_SECRET_KEY,
-        grant_type: process.env.AIRTEL_PIN
+        grant_type: "client_credentials"
     }
 
-    await axios.post('https://openapiuat.airtel.africa/auth/oauth2/token' , postData, 
+    const tokenData = await axios.post('https://openapiuat.airtel.africa/auth/oauth2/token' , postData, 
         { headers: {
             'Content-Type': 'application/json',
             'Accept': '*/*',
             }
-        }).then(response => {
-            console.log('Token is now : ' + response);
-            console.log('Token JSON is ' + JSON.stringify(response))
         })
-        .catch(error => {
-            console.error('Generate token error is : ' + error.message);
-        });
     
+    const { access_token } = tokenData.data;
+    console.log('The access token is now : '+ access_token);
 
     const data = {
         'payee': {
             'msisdn': phonenumber,
             'wallet_type': 'NORMAL'
         },
-        'reference': generateTransactionId(),
+        'reference': 'ABCD0H9841',
         'pin': process.env.AIRTEL_PIN,
         'transaction': {
             'amount': amount,
@@ -70,24 +66,22 @@ export const sendMoneyUseAxios = tryCatch (async( req, res ) => {
             'type': 'B2C'
         }
     }
-    const resp = await axios.post('https://openapiuat.airtel.africa/standard/v3/disbursements', data, 
+     await axios.post('https://openapiuat.airtel.africa/standard/v3/disbursements', data, 
         { headers: {
             'Content-Type': 'application/json',
             'Accept': '*/*',
             'X-Country' : 'TZ',
             'X-Currency' : 'TZS',
-            'Authorization' : 'Bearer eyJh' 
+            'Authorization' : 'Bearer ' + access_token 
            // 'Authorization' : 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImhvbWVAZ21haWwuY29tIiwicGFzc3dvcmQiOiJob21lMTIzIiwiaWF0IjoxNzE3NTk2NTMxLCJleHAiOjE3MTc2Mjg5MzF9.Kd6YuDQX7uWoCNdsQ4k263jG6C9t2Uc2HFK47Sayeks'
       }
-    });
-
-    const respons = resp.data
-    if(respons) {
-    console.log('The body is now : ' + respons);
-    console.log('The status is now : ' + respons.status);
-    }else {
-    return res.status(400).json( {success: false, message: 'Failed to connect to airtel'} )
-  }
+    }).then((respons) => {
+        console.log('The body is now : ' + respons.data);
+        console.log('The status is now : ' + respons.status);
+        return res.status(200).json({ success: true, result: respons.data })
+    }).catch(error => {
+        return res.status(400).json({ success: false, message: error.message })
+    })
 
 })
 
