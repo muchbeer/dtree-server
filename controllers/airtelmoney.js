@@ -40,8 +40,7 @@ export const sendMoneyUseAxios = tryCatch (async( req, res ) => {
     const postData = {
         client_id: process.env.AIRTEL_CLIENT_ID,
         client_secret: process.env.AIRTEL_SECRET_KEY,
-        grant_type: "ntKaYI5uy7HnaQYxndh05eyxxL5QwwxtRy2Mb8RNVyeG8FBoXGAx4JvcfPDVYzRwpd+D8gNFvBkpujnmjpJAQLSdehg9ic+UVyqIYaLEYRdepPqJGSSLtqCso7GtakOUtTo2ffLVxllhW9eHcQ5w9ylZf6RgcBEkryElJjBsBmQ="
-
+        grant_type: process.env.AIRTEL_PIN
     }
 
     await axios.post('https://openapiuat.airtel.africa/auth/oauth2/token' , postData, 
