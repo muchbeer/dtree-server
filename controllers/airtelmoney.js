@@ -40,7 +40,7 @@ export const sendMoneyUseAxios = tryCatch (async( req, res ) => {
     const postData = {
         client_id: process.env.AIRTEL_CLIENT_ID,
         client_secret: process.env.AIRTEL_SECRET_KEY,
-        grant_type: "U9IEQhH7kHEQgI5wNpbJx1LSB9M48X6mWbTali0HrJLQf94oO3+JEcZRPKE6aBTC5EyWoJiPm8wyRYdGYs/m26d/X5US4xSi09HNcok3tLu0V4+ZNx9XTS8dT+SulfnfYFYZxYgbmowWSOgSSYNOxFUSxgWunHLTTjRQCk4YFo0="
+        grant_type: "ntKaYI5uy7HnaQYxndh05eyxxL5QwwxtRy2Mb8RNVyeG8FBoXGAx4JvcfPDVYzRwpd+D8gNFvBkpujnmjpJAQLSdehg9ic+UVyqIYaLEYRdepPqJGSSLtqCso7GtakOUtTo2ffLVxllhW9eHcQ5w9ylZf6RgcBEkryElJjBsBmQ="
 
     }
 
