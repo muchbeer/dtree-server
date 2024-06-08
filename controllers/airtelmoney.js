@@ -1,20 +1,11 @@
 import { generateTransactionId } from './utils/common.js';
 import tryCatch from './utils/trycatch.js'
 import jwt from 'jsonwebtoken';
-import { JSEncrypt } from 'node-jsencrypt';
 import axios from 'axios';
 
 export const generateEncryptedKey = tryCatch (async( req, res ) => {
-    var plaintext = '2016';
-    var pubilc_key = "-----BEGIN PUBLIC KEY-----MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCkq3XbDI1s8Lu7SpUBP+bqOs/MC6PKWz6n/0UkqTiOZqKqaoZClI3BUDTrSIJsrN1Qx7ivBzsaAYfsB0CygSSWay4iyUcnMVEDrNVOJwtWvHxpyWJC5RfKBrweW9b8klFa/CfKRtkK730apy0Kxjg+7fF0tB4O3Ic9Gxuv4pFkbQIDAQAB-----END PUBLIC KEY-----";
-    // Encrypt with the public key...
-    var encrypt = new JSEncrypt();
-    encrypt.setPublicKey(pubilc_key);
-    var encrypted = encrypt.encrypt(plaintext);
-    console.log('This is to call the encrypted key')
-    console.log('The encrypted key is : ' + encrypted);
 
-    return res.status(201).json({ pin: encrypted })
+    return res.status(201).json({ pin: false })
 });
 
 export const sendMoneyUseAxios = tryCatch (async( req, res ) => {
