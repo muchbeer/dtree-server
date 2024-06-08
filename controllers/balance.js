@@ -2,7 +2,7 @@ import connect from "../config.js";
 import { getLastRecord } from "../routes/common.js";
 import tryCatch from "./utils/trycatch.js";
 
-//Work balance
+
 export const getBalance = tryCatch(async (req, res) => {
 
     const { user } = req.body
