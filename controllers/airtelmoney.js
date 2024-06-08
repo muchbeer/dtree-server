@@ -11,6 +11,9 @@ export const generateEncryptedKey = tryCatch (async( req, res ) => {
     var encrypt = new JSEncrypt();
     encrypt.setPublicKey(pubilc_key);
     var encrypted = encrypt.encrypt(plaintext);
+    console.log('This is to call the encrypted key')
+    console.log('The encrypted key is : ' + encrypted);
+
     return res.status(201).json({ pin: encrypted })
 });
 
