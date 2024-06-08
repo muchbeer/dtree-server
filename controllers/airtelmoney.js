@@ -1,32 +1,17 @@
 import { generateTransactionId } from './utils/common.js';
 import tryCatch from './utils/trycatch.js'
 import jwt from 'jsonwebtoken';
-import { stringify, parse } from 'flatted';
+import { JSEncrypt } from 'node-jsencrypt';
 import axios from 'axios';
 
-export const generateToken = tryCatch (async( req, res ) => {
-    
-    const postData = {
-        client_id: process.env.AIRTEL_CLIENT_ID,
-        client_secret: process.env.AIRTEL_SECRET_KEY,
-        grant_type: process.env.AIRTEL_PIN
-        }
-
-    const tokenGenerate = await axios.post('https://openapiuat.airtel.africa/auth/oauth2/token' , postData, 
-        { headers: {
-            'Content-Type': 'application/json',
-            'Accept': '*/*',
-          }
-    });
-
-    const respons = tokenGenerate.data
-    if(respons) {
-    console.log('The body is now : ' + respons);
-    console.log('The JSON TOKEN is : ' + JSON.stringify(respons));
-    return res.status(201).json({ success:true, token: respons })
-    }else {
-    return res.status(400).json({ success: false, message: 'Failed to connect to airtel' })
-  }
+export const generateEncryptedKey = tryCatch (async( req, res ) => {
+    var plaintext = '2016';
+    var pubilc_key = "-----BEGIN PUBLIC KEY-----MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCkq3XbDI1s8Lu7SpUBP+bqOs/MC6PKWz6n/0UkqTiOZqKqaoZClI3BUDTrSIJsrN1Qx7ivBzsaAYfsB0CygSSWay4iyUcnMVEDrNVOJwtWvHxpyWJC5RfKBrweW9b8klFa/CfKRtkK730apy0Kxjg+7fF0tB4O3Ic9Gxuv4pFkbQIDAQAB-----END PUBLIC KEY-----";
+    // Encrypt with the public key...
+    var encrypt = new JSEncrypt();
+    encrypt.setPublicKey(pubilc_key);
+    var encrypted = encrypt.encrypt(plaintext);
+    return res.status(201).json({ pin: encrypted })
 });
 
 export const sendMoneyUseAxios = tryCatch (async( req, res ) => {

@@ -18,6 +18,7 @@
     "express": "^4.19.2",
     "flatted": "^3.3.1",
     "jsonwebtoken": "^9.0.2",
+    "node-jsencrypt": "^1.0.0",
     "pg": "^8.11.5"
   }
 }
