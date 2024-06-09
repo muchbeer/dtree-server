@@ -15,6 +15,7 @@ const pool = new Pool({
   ssl: true
 });
 
+//This is database
 const pool_local = new Pool({
   user: process.env.DB_USER,
   host: process.env.DB_HOST,
