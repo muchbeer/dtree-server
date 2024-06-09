@@ -167,7 +167,6 @@ const sendAirtimeToDb = async(respData, isSingle, user) => {
        const values_balance_updated = [ updated_balance.toString(), deductAmount, username, current_balance_spent ]; 
        const sql_new_balance = 'INSERT INTO airtime_balance ( balance, deduct, user_email, balance_spent ) VALUES ( $1, $2, $3, $4 ) RETURNING *';
        const balance_response = await connect.query( sql_new_balance, values_balance_updated );
-       console.log('The airtime was sent and updated balance is : ' + JSON.stringify(balance_response));
 
      }
      

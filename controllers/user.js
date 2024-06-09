@@ -21,7 +21,6 @@ export const register = tryCatch(async (req, res) => {
          await connect.query(sql, values)
         .then( async(result)=> {
           await  connect.query(sql_balance, values_balance).then(respons => {
-            console.log('Top up done ');
           })
 
            return res.status(201).json({ success: true, result: result.rows[0] });  
@@ -41,7 +40,6 @@ export const login = tryCatch(async (req, res) => {
         const tokenValue = { email: email, password: password }
 
         const token = generateAccessToken(tokenValue);
-        console.log('Current token is now : ' + token);
 
         const result = await connect.query(sql, values);
         const fetch_data = result.rows

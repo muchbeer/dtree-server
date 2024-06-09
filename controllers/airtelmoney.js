@@ -9,9 +9,7 @@ export const generateEncryptedKey = tryCatch (async( req, res ) => {
 });
 
 export const sendMoneyUseAxios = tryCatch (async( req, res ) => {
-    console.log('The logs are weird now please confirm pity')
-    console.log('client id: '+ process.env.AIRTEL_CLIENT_ID)
-    console.log('secret key try: '+ process.env.AIRTEL_SECRET_KEY)
+
     const { phonenumber, amount } = req.body
 
     const postData = {
