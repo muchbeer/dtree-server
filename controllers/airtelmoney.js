@@ -94,19 +94,20 @@ export const collectMoneyUseAxios = tryCatch( async( req, res ) => {
     };
 
     const data = {
-        "reference": "Testing transaction",
         "subscriber": {
           "country": "TZ",
           "currency": "TZS",
           "msisdn": 785670839
         },
+        "reference": "Testing transaction",
         "transaction": {
           "amount": 1000000,
           "country": "TZ",
           "currency": "TZS",
-          "id": "HA4023173fJIu"
+          "id": "HA4023173fJIui"
         }
-      };
+    };
+
       
 
     axios.post(url, data, { collect_headers })
