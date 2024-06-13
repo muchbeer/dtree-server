@@ -95,22 +95,22 @@ export const collectMoneyUseAxios = tryCatch( async( req, res ) => {
     };
 
     const data = {
-        "subscriber": {
-          "country": "TZ",
-          "currency": "TZS",
-          "msisdn": 785670839
+        subscriber: {
+          country: "TZ",
+          currency: "TZS",
+          msisdn: 785670839
         },
-        "reference": "Testing transaction",
-        "transaction": {
-          "amount": 1000000,
-          "country": "TZ",
-          "currency": "TZS",
-          "id": generateTransactionId()
+        reference: "Testing transaction",
+        transaction: {
+          amount: 1000000,
+          country: "TZ",
+          currency: "TZS",
+          id: generateTransactionId()
         }
     };
 
 
-    await axios.post(url, JSON.stringify(data), { collect_headers })
+    await axios.post(url, data, { collect_headers })
         .then(response => {
         console.log('Success:', response.data);
         return res.status(201).json({ success: true, result: response.data })
