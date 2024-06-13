@@ -1,4 +1,4 @@
-import {  generateAirtelTokenCollect, generateAirtelTokenDisburse, generateTransactionId } from './utils/common.js';
+import {   generateTransactionId } from './utils/common.js';
 import tryCatch from './utils/trycatch.js'
 import jwt from 'jsonwebtoken';
 import axios from 'axios';
