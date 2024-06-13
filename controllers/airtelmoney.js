@@ -29,14 +29,14 @@ export const sendMoneyUseAxios = tryCatch (async( req, res ) => {
     console.log('The access token is now : '+ access_token);
 
     const data = {
-        'payee': {
-            'msisdn': phonenumber,
+        payee: {
+            msisdn: phonenumber,
         },
-        'reference': 'PayTemeria',
-        'pin': process.env.AIRTEL_PIN,
-        'transaction': {
-            'amount': amount,
-            'id': generateTransactionId(),
+        reference: 'PayTemeria',
+        pin: process.env.AIRTEL_PIN,
+        transaction: {
+            amount: amount,
+            id: generateTransactionId(),
         }
     }
     console.log('generated ID: ' + generateTransactionId())
