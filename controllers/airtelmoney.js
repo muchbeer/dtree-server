@@ -29,36 +29,38 @@ export const sendMoneyUseAxios = tryCatch (async( req, res ) => {
     console.log('The access token is now : '+ access_token);
 
     const data = {
-        payee: {
-            msisdn: phonenumber,
+        "payee": {
+          "msisdn": phonenumber
         },
-        reference: 'PayTemeria',
-        pin: process.env.AIRTEL_PIN,
-        transaction: {
-            amount: amount,
-            id: generateTransactionId(),
+        "reference": "PayTemeria",
+        "pin": process.env.AIRTEL_PIN,
+        "transaction": {
+          "amount": 1000,
+          "id": generateTransactionId()
         }
-    }
+      };
+
+    const url = 'https://openapiuat.airtel.africa/standard/v1/disbursements/';
+
+    const disburse_headers = {
+        'Content-Type': 'application/json',
+        'Accept': '*/*',
+        'X-Country': 'TZ',
+        'X-Currency': 'TZS',
+        'Authorization': 'Bearer ' + access_token
+      };
+
     console.log('generated ID: ' + generateTransactionId())
-    // https://openapiuat.airtel.africa/standard/v1/disbursements/
-     await axios.post('https://openapiuat.airtel.africa/standard/v1/disbursements', data, 
-        { headers: {
-            'Content-Type': 'application/json',
-            'Accept': '*/*',
-            'X-Country' : 'TZ',
-            'X-Currency' : 'TZS',
-            'Authorization' : 'Bearer ' + access_token 
-           // 'Authorization' : 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImhvbWVAZ21haWwuY29tIiwicGFzc3dvcmQiOiJob21lMTIzIiwiaWF0IjoxNzE3NTk2NTMxLCJleHAiOjE3MTc2Mjg5MzF9.Kd6YuDQX7uWoCNdsQ4k263jG6C9t2Uc2HFK47Sayeks'
-      }
-    }).then((respons) => {
+
+    await axios.post(url, data,  { headers: disburse_headers })
+        .then((respons) => {
         console.log('The response is success');
         console.log('The body is now : ' + JSON.stringify(respons.data));
-        console.log('The status is now : ' + JSON.stringify(respons.status));
+       
         return res.status(200).json({ success: true, result: respons.data })
     }).catch(error => {
         console.log('The response is failed');
         console.log('The body is now : ' + JSON.stringify(error));
-        console.log('The status is now : ' + error);
         return res.status(400).json({ success: false, message: error })
     })
 
