@@ -109,13 +109,12 @@ export const collectMoneyUseAxios = tryCatch( async( req, res ) => {
         }
     };
 
-
-    await axios.post(url, data, { collect_headers })
+    console.log('The data sending is now : ' + JSON.stringify(data))
+    await axios.post(url, JSON.stringify(data), { collect_headers })
         .then(response => {
         console.log('Success:', response.data);
         return res.status(201).json({ success: true, result: response.data })
-    })
-    .catch(error => {
+    }).catch(error => {
         console.error('Error:', error.response ? error.response.data : error.message);
         return res.status(401).json({ success: false, message: error })
     }); 
