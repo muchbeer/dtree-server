@@ -30,47 +30,8 @@ export const sumIteminArray = (arr) => {
     return total;
   }
 
-
-export const generateAirtelTokenDisburse = async() => {
-    const postData = {
-        client_id: process.env.AIRTEL_CLIENT_ID,
-        client_secret: process.env.AIRTEL_SECRET_KEY,
-        grant_type: "client_credentials"
-    }
-
-    const tokenData = await axios.post('https://openapiuat.airtel.africa/auth/oauth2/token' , postData, 
-        { headers: {
-            'Content-Type': 'application/json',
-            'Accept': '*/*',
-            }
-        })
-    
-    const { access_token } = tokenData.data;
-    console.log('The access token is now : '+ access_token);
-    return access_token;
-}
-
 export const generateTransactionId = () => {
     const timestamp = Date.now(); // Current timestamp in milliseconds
     const randomNum = Math.floor(Math.random() * 1000000); // A random number between 0 and 999999
     return `mykT${timestamp}R${randomNum}`;
 };
-
-export const generateAirtelTokenCollect = async() => {
-    const postData = {
-        client_id: process.env.AIRTEL_CLIENT_ID_COLLECT,
-        client_secret: process.env.AIRTEL_SECRET_KEY_COLLECT,
-        grant_type: "client_credentials"
-    }
-
-    const tokenData = await axios.post('https://openapiuat.airtel.africa/auth/oauth2/token' , postData, 
-        { headers: {
-            'Content-Type': 'application/json',
-            'Accept': '*/*',
-            }
-        })
-    
-    const { access_token } = tokenData.data;
-    console.log('The access token is now : '+ access_token);
-    return access_token;
-}

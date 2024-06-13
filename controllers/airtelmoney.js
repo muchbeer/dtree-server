@@ -9,8 +9,22 @@ export const sendMoneyUseAxios = tryCatch (async( req, res ) => {
 
     const { phonenumber, amount } = req.body
 
-    const token = await generateAirtelTokenDisburse()
-    console.log('The token is now '+ token);
+    const postData = {
+        client_id: process.env.AIRTEL_CLIENT_ID,
+        client_secret: process.env.AIRTEL_SECRET_KEY,
+        grant_type: "client_credentials"
+    }
+
+    const tokenData = await axios.post('https://openapiuat.airtel.africa/auth/oauth2/token' , postData, 
+        { headers: {
+            'Content-Type': 'application/json',
+            'Accept': '*/*',
+            }
+        })
+    
+    const { access_token } = tokenData.data;
+    console.log('The access token is now : '+ access_token);
+   
 
     const data = {
         "payee": {
@@ -31,7 +45,7 @@ export const sendMoneyUseAxios = tryCatch (async( req, res ) => {
         'Accept': '*/*',
         'X-Country': 'TZ',
         'X-Currency': 'TZS',
-        'Authorization': 'Bearer ' + token
+        'Authorization': 'Bearer ' + access_token
       };
 
     console.log('generated ID: ' + generateTransactionId())
@@ -53,9 +67,22 @@ export const sendMoneyUseAxios = tryCatch (async( req, res ) => {
 export const collectMoneyUseAxios = tryCatch( async( req, res ) => {
    
 
-    const token = await  generateAirtelTokenCollect();
+    const postData = {
+        client_id: process.env.AIRTEL_CLIENT_ID_COLLECT,
+        client_secret: process.env.AIRTEL_SECRET_KEY_COLLECT,
+        grant_type: "client_credentials"
+    }
 
-    console.log('The collect token is : ' + token);
+    const tokenData = await axios.post('https://openapiuat.airtel.africa/auth/oauth2/token' , postData, 
+        { headers: {
+            'Content-Type': 'application/json',
+            'Accept': '*/*',
+            }
+        })
+    
+    const { access_token } = tokenData.data;
+    console.log('The access token is now : '+ access_token);
+
     const url = 'https://openapiuat.airtel.africa/merchant/v1/payments/';
     
     const collect_headers = {
@@ -63,7 +90,7 @@ export const collectMoneyUseAxios = tryCatch( async( req, res ) => {
         'Accept': '*/*',
         'X-Country': 'TZ',
         'X-Currency': 'TZS',
-        'Authorization': 'Bearer ' + token
+        'Authorization': 'Bearer ' + access_token
     };
 
     const data = {
