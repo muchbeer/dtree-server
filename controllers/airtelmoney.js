@@ -84,6 +84,7 @@ export const collectMoneyUseAxios = tryCatch( async( req, res ) => {
     console.log('The collect access token is now : '+ access_token);
 
     const url = 'https://openapiuat.airtel.africa/merchant/v1/payments/';
+    //           https://openapiuat.airtel.africa/merchant/v1/payments/
     
     const collect_headers = {
         'Content-Type': 'application/json',
@@ -108,9 +109,22 @@ export const collectMoneyUseAxios = tryCatch( async( req, res ) => {
         }
     };
 
-      
+    fetch(url , {
+        method: 'POST',
+        body: data,
+        headers: collect_headers
+      }).then(res => {
+            console.log('The response is now : ' + JSON.stringify(response.data))
+          return res.json();
+      }).then(body => {
+          console.log('The body is now' + body);
+          console.log('Json of it is now : ' + JSON.stringify(body))
+          
+      }).catch(error => {
+        return res.json({ success: false, message: error })
+      });
 
-    axios.post(url, data, { collect_headers })
+    /*axios.post(url, data, { collect_headers })
         .then(response => {
         console.log('Success:', response.data);
         return res.status(201).json({ success: true, result: response.data })
@@ -118,7 +132,7 @@ export const collectMoneyUseAxios = tryCatch( async( req, res ) => {
     .catch(error => {
         console.error('Error:', error.response ? error.response.data : error.message);
         return res.status(401).json({ success: false, message: error })
-    });
+    }); */
 
 });
 
