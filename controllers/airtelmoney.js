@@ -1,32 +1,15 @@
-import { generateTransactionId } from './utils/common.js';
+import { generateAirtelToken, generateTransactionId } from './utils/common.js';
 import tryCatch from './utils/trycatch.js'
 import jwt from 'jsonwebtoken';
 import axios from 'axios';
 
-export const generateEncryptedKey = tryCatch (async( req, res ) => {
 
-    return res.status(201).json({ pin: false })
-});
 
 export const sendMoneyUseAxios = tryCatch (async( req, res ) => {
 
     const { phonenumber, amount } = req.body
 
-    const postData = {
-        client_id: process.env.AIRTEL_CLIENT_ID,
-        client_secret: process.env.AIRTEL_SECRET_KEY,
-        grant_type: "client_credentials"
-    }
-
-    const tokenData = await axios.post('https://openapiuat.airtel.africa/auth/oauth2/token' , postData, 
-        { headers: {
-            'Content-Type': 'application/json',
-            'Accept': '*/*',
-            }
-        })
-    
-    const { access_token } = tokenData.data;
-    console.log('The access token is now : '+ access_token);
+    const token = generateAirtelToken();
 
     const data = {
         "payee": {
@@ -35,7 +18,7 @@ export const sendMoneyUseAxios = tryCatch (async( req, res ) => {
         "reference": "PayTemeria",
         "pin": process.env.AIRTEL_PIN,
         "transaction": {
-          "amount": 1000,
+          "amount": amount,
           "id": generateTransactionId()
         }
       };
@@ -47,7 +30,7 @@ export const sendMoneyUseAxios = tryCatch (async( req, res ) => {
         'Accept': '*/*',
         'X-Country': 'TZ',
         'X-Currency': 'TZS',
-        'Authorization': 'Bearer ' + access_token
+        'Authorization': 'Bearer ' + token
       };
 
     console.log('generated ID: ' + generateTransactionId())
@@ -66,8 +49,45 @@ export const sendMoneyUseAxios = tryCatch (async( req, res ) => {
 
 })
 
-export const receivingMoneyUseAxios = tryCatch( async( req, res ) => {
-    return res.status(201).json({ success: true })
+export const collectMoneyUseAxios = tryCatch( async( req, res ) => {
+   
+
+    const token = generateAirtelToken();
+    const url = 'https://openapiuat.airtel.africa/merchant/v1/payments/';
+    
+    const collect_headers = {
+        'Content-Type': 'application/json',
+        'Accept': '*/*',
+        'X-Country': 'TZ',
+        'X-Currency': 'TZS',
+        'Authorization': 'Bearer ' + token
+    };
+
+    const data = {
+        "reference": "Testing transaction",
+        "subscriber": {
+        "country": "TZ",
+        "currency": "TZS",
+        "msisdn": 785670839
+        },
+        "transaction": {
+        "amount": 1000000,
+        "country": "TZ",
+        "currency": "TZS",
+        "id": generateTransactionId()
+        }
+    };
+
+    axios.post(url, data, { collect_headers })
+        .then(response => {
+        console.log('Success:', response.data);
+        return res.status(201).json({ success: true, result: response.data })
+    })
+    .catch(error => {
+        console.error('Error:', error.response ? error.response.data : error.message);
+        return res.status(401).json({ success: false, message: error })
+    });
+
 });
 
 export const sendairtelmoney = tryCatch (async(req, res) => {
