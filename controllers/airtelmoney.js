@@ -31,16 +31,15 @@ export const sendMoneyUseAxios = tryCatch (async( req, res ) => {
     const data = {
         'payee': {
             'msisdn': phonenumber,
-            'wallet_type': 'NORMAL'
         },
         'reference': 'PayTemeria',
         'pin': process.env.AIRTEL_PIN,
         'transaction': {
             'amount': amount,
             'id': generateTransactionId(),
-            'type': 'B2C'
         }
     }
+    console.log('generated ID: ' + generateTransactionId())
     // https://openapiuat.airtel.africa/standard/v1/disbursements/
      await axios.post('https://openapiuat.airtel.africa/standard/v1/disbursements', data, 
         { headers: {
