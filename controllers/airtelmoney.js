@@ -52,11 +52,15 @@ export const sendMoneyUseAxios = tryCatch (async( req, res ) => {
            // 'Authorization' : 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImhvbWVAZ21haWwuY29tIiwicGFzc3dvcmQiOiJob21lMTIzIiwiaWF0IjoxNzE3NTk2NTMxLCJleHAiOjE3MTc2Mjg5MzF9.Kd6YuDQX7uWoCNdsQ4k263jG6C9t2Uc2HFK47Sayeks'
       }
     }).then((respons) => {
+        console.log('The response is success');
         console.log('The body is now : ' + JSON.stringify(respons.data));
         console.log('The status is now : ' + JSON.stringify(respons.status));
         return res.status(200).json({ success: true, result: respons.data })
     }).catch(error => {
-        return res.status(400).json({ success: false, message: error.message })
+        console.log('The response is failed');
+        console.log('The body is now : ' + JSON.stringify(error));
+        console.log('The status is now : ' + error);
+        return res.status(400).json({ success: false, message: error })
     })
 
 })
