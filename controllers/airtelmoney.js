@@ -33,7 +33,7 @@ export const sendMoneyUseAxios = tryCatch (async( req, res ) => {
             'msisdn': phonenumber,
             'wallet_type': 'NORMAL'
         },
-        'reference': 'ABCD0H9841',
+        'reference': 'PayTemeria',
         'pin': process.env.AIRTEL_PIN,
         'transaction': {
             'amount': amount,
@@ -52,14 +52,18 @@ export const sendMoneyUseAxios = tryCatch (async( req, res ) => {
            // 'Authorization' : 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImhvbWVAZ21haWwuY29tIiwicGFzc3dvcmQiOiJob21lMTIzIiwiaWF0IjoxNzE3NTk2NTMxLCJleHAiOjE3MTc2Mjg5MzF9.Kd6YuDQX7uWoCNdsQ4k263jG6C9t2Uc2HFK47Sayeks'
       }
     }).then((respons) => {
-        console.log('The body is now : ' + respons.data);
-        console.log('The status is now : ' + respons.status);
+        console.log('The body is now : ' + JSON.stringify(respons.data));
+        console.log('The status is now : ' + JSON.stringify(respons.status));
         return res.status(200).json({ success: true, result: respons.data })
     }).catch(error => {
         return res.status(400).json({ success: false, message: error.message })
     })
 
 })
+
+export const receivingMoneyUseAxios = tryCatch( async( req, res ) => {
+    return res.status(201).json({ success: true })
+});
 
 export const sendairtelmoney = tryCatch (async(req, res) => {
 

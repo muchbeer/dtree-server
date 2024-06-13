@@ -39,7 +39,7 @@ app.use('/api/contact', routerContact);
 app.use('/api/airtelmoney', routerAirtelMoney);
 
 
-const port = 5001;
+const port = process.env.PORT || 5001;
 
 app.get('/api', (req, res) => {
   
