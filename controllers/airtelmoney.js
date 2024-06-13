@@ -81,7 +81,7 @@ export const collectMoneyUseAxios = tryCatch( async( req, res ) => {
         })
     
     const { access_token } = tokenData.data;
-    console.log('The access token is now : '+ access_token);
+    console.log('The collect access token is now : '+ access_token);
 
     const url = 'https://openapiuat.airtel.africa/merchant/v1/payments/';
     
