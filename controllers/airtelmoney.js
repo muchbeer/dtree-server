@@ -9,7 +9,7 @@ export const sendMoneyUseAxios = tryCatch (async( req, res ) => {
 
     const { phonenumber, amount } = req.body
 
-    const token = generateAirtelToken();
+    const token = await generateAirtelToken();
 
     const data = {
         "payee": {
@@ -52,7 +52,7 @@ export const sendMoneyUseAxios = tryCatch (async( req, res ) => {
 export const collectMoneyUseAxios = tryCatch( async( req, res ) => {
    
 
-    const token = generateAirtelToken();
+    const token = await  generateAirtelToken();
     const url = 'https://openapiuat.airtel.africa/merchant/v1/payments/';
     
     const collect_headers = {
