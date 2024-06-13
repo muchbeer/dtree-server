@@ -73,14 +73,14 @@ export const collectMoneyUseAxios = tryCatch( async( req, res ) => {
         grant_type: "client_credentials"
     }
 
-    const tokenData = await axios.post('https://openapiuat.airtel.africa/auth/oauth2/token' , postData, 
+    const token = await axios.post('https://openapiuat.airtel.africa/auth/oauth2/token' , postData, 
         { headers: {
             'Content-Type': 'application/json',
             'Accept': '*/*',
             }
         })
     
-    const { access_token } = tokenData.data;
+    const { access_token } = token.data;
     console.log('The collect access token is now : '+ access_token);
 
     const url = 'https://openapiuat.airtel.africa/merchant/v1/payments/';
