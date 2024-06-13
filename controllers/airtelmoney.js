@@ -1,4 +1,4 @@
-import { generateAirtelToken, generateTransactionId } from './utils/common.js';
+import {  generateAirtelTokenCollect, generateAirtelTokenDisburse, generateTransactionId } from './utils/common.js';
 import tryCatch from './utils/trycatch.js'
 import jwt from 'jsonwebtoken';
 import axios from 'axios';
@@ -9,7 +9,8 @@ export const sendMoneyUseAxios = tryCatch (async( req, res ) => {
 
     const { phonenumber, amount } = req.body
 
-    const token = await generateAirtelToken();
+    const token = await generateAirtelTokenDisburse()
+    console.log('The token is now '+ token);
 
     const data = {
         "payee": {
@@ -52,7 +53,9 @@ export const sendMoneyUseAxios = tryCatch (async( req, res ) => {
 export const collectMoneyUseAxios = tryCatch( async( req, res ) => {
    
 
-    const token = await  generateAirtelToken();
+    const token = await  generateAirtelTokenCollect();
+
+    console.log('The collect token is : ' + token);
     const url = 'https://openapiuat.airtel.africa/merchant/v1/payments/';
     
     const collect_headers = {
