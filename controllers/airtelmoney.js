@@ -61,7 +61,7 @@ export const sendMoneyUseAxios = tryCatch (async( req, res ) => {
       
     await axios.post(url, data,  { headers: disburse_headers })
         .then( async(respons) => {
-            const disburse = respons.data.result
+            const disburse = await respons.data.result
             const id = disburse.data.transaction.id
             const phone_number = data.payee.msisdn 
             const amount = data.transaction.amount 
@@ -146,7 +146,7 @@ export const collectMoneyUseAxios = tryCatch( async( req, res ) => {
     await axios.post(url, data, { headers: collect_headers })
         .then( async(respons)  => {
 
-            const collect = respons.data.result
+            const collect = await respons.data.result
               console.log('Call collect response : respons.data.result');
               console.log('The result collected is : ' + JSON.stringify(collect))
           
