@@ -147,7 +147,9 @@ export const collectMoneyUseAxios = tryCatch( async( req, res ) => {
         .then( async(respons)  => {
 
             const collect = respons.data.result
-            console.log('Call collect response : respons.data.result')
+              console.log('Call collect response : respons.data.result');
+              console.log('The result collected is : ' + JSON.stringify(collect))
+          
             const id = collect.data.transaction.id
             console.log('Call the id is : ' + id );
             const phone_number = data.subscriber.msisdn 
