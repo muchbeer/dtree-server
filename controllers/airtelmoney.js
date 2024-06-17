@@ -1,7 +1,8 @@
-import {   generateTransactionId } from './utils/common.js';
+import {   currentTime, generateTransactionId } from './utils/common.js';
 import tryCatch from './utils/trycatch.js'
 import jwt from 'jsonwebtoken';
 import axios from 'axios';
+import connect from '../config.js';
 
 
 
@@ -23,9 +24,8 @@ export const sendMoneyUseAxios = tryCatch (async( req, res ) => {
         })
     
     const { access_token } = tokenData.data;
-    console.log('The access token is now : '+ access_token);
-   
 
+   
     const data = {
         "payee": {
           "msisdn": phonenumber
@@ -48,21 +48,48 @@ export const sendMoneyUseAxios = tryCatch (async( req, res ) => {
         'Authorization': 'Bearer ' + access_token
       };
 
-    console.log('generated ID: ' + generateTransactionId())
-
+      const sql = `INSERT INTO airtelmoney_api (
+       id, phone_number, amount, access_token, reference, status, response_code, 
+       result_code, message, airtel_money_id, transact_date, business_type  
+       ) 
+      VALUES 
+      ( $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12
+       ) 
+      RETURNING *;
+      `;
+      
+      
     await axios.post(url, data,  { headers: disburse_headers })
-        .then((respons) => {
-        console.log('The response is success');
-        console.log('The body is now : ' + JSON.stringify(respons.data));
-       
-        return res.status(200).json({ success: true, result: respons.data })
+        .then( async(respons) => {
+            const disburse = respons.data.result
+            const id = disburse.data.transaction.id
+            const phone_number = data.payee.msisdn 
+            const amount = data.transaction.amount 
+            const token = access_token
+            const reference = data.reference
+            const status = disburse.status.success 
+            const response_code = disburse.status.response_code 
+            const result_code = disburse.status.result_code 
+            const message = disburse.status.message
+            const airtel_money_id = disburse.data.transaction.airtel_money_id
+            const transact_date = currentTime()
+            const business_type = 'B2C'
+
+            const values = [ id, phone_number, amount, token, reference, status, response_code, result_code, message,airtel_money_id, transact_date, business_type ];
+
+            await connect.query( sql, values ).catch(error => {
+                console.log('Please capture error of the disbursement ' + error);
+                return res.status(200).json({ success:true, result: 'payment is made but data not save to the db ' })
+            });
+        
+            return res.status(200).json({ success: true, result: respons.data })
     }).catch(error => {
         console.log('The response is failed');
         console.log('The body is now : ' + JSON.stringify(error));
         return res.status(400).json({ success: false, message: error })
     })
 
-})
+});
 
 export const collectMoneyUseAxios = tryCatch( async( req, res ) => {
    
@@ -81,10 +108,8 @@ export const collectMoneyUseAxios = tryCatch( async( req, res ) => {
         })
     
     const { access_token } = token.data;
-    console.log('The collect access token is now : '+ access_token);
 
     const url = 'https://openapiuat.airtel.africa/merchant/v1/payments/';
-    //           https://openapiuat.airtel.africa/merchant/v1/payments/
     
     const collect_headers = {
         'Content-Type': 'application/json',
@@ -109,60 +134,45 @@ export const collectMoneyUseAxios = tryCatch( async( req, res ) => {
         }
     };
 
-    
-    await axios.post(url, data, { headers: collect_headers } )
-        .then(response => {
-        console.log('Success:', response.data);
-        return res.status(201).json({ success: true, result: response.data })
+    const sql_collect = `INSERT INTO airtelmoney_api (
+        id, phone_number, amount, access_token, reference, status, response_code, 
+        result_code, message, transact_date, business_type  
+        ) 
+       VALUES 
+       ( $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11
+        ) 
+       RETURNING *;
+       `;
+
+    await axios.post(url, data, { headers: collect_headers })
+        .then( async(respons)  => {
+
+            const collect = respons.data.result
+            const id = collect.data.transaction.id
+            const phone_number = data.subscriber.msisdn 
+            const amount = data.transaction.amount 
+            const token = access_token
+            const reference = data.reference
+            const status = collect.data.transaction.status 
+            const response_code = collect.status.response_code 
+            const result_code = collect.status.result_code 
+            const message = collect.status.message
+            const transact_date = currentTime()
+            const business_type = 'C2B'
+
+            const collect_values = [ id, phone_number, amount, token, reference, status, response_code, result_code, message, transact_date, business_type ];
+
+            await connect.query( sql_collect, collect_values ).catch(error => {
+                console.log('Please capture error for collection ' + error);
+                return res.status(200).json({ success: true, result: 'payment is made but data not save to the db ' })
+            });
+
+        return res.status(201).json({ success: true, result: respons.data })
     }).catch(error => {
         console.error('Error:', error.response ? error.response.data : error.message);
         return res.status(401).json({ success: false, message: error })
     }); 
 
-});
-
-export const sendairtelmoney = tryCatch (async(req, res) => {
-
-    const { phonenumber, amount } = req.body
-
-
-    const headers = {
-        'Content-Type': 'application/json',
-        'Accept': '*/*',
-        'X-Country': 'TZ',
-        'X-Currency': 'TZS',
-        'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImhvbWVAZ21haWwuY29tIiwicGFzc3dvcmQiOiJob21lMTIzIiwiaWF0IjoxNzE3NTkyMzQxLCJleHAiOjE3MTc1OTU5NDF9.LMYrIWzXPkXXjGZ11T8QRvMCevBZmCQWZqWY3oBG8C4',
-      };
-
-    const inputBody = {
-        'payee': {
-            'msisdn': phonenumber,
-            'wallet_type': 'NORMAL'
-        },
-        'reference': generateTransactionId(),
-        'pin': process.env.AIRTEL_PIN,
-        'transaction': {
-            'amount': amount,
-            'id': generateTransactionId(),
-            'type': 'B2C'
-        }
-    }
-
-
-    await fetch('https://openapiuat.airtel.africa/standard/v3/disbursements', {
-        method: 'POST',
-        body: inputBody,
-        headers: headers
-      }).then((response) => {
-            console.log('Response is now : ' + JSON.stringify(response))
-            console.log('This is the body : ' + JSON.stringify(response.body))
-            return res.json();
-      }).then(body => {
-            console.log('The dependent onject is : ' + body)
-            console.log('Now receive the body : ' + JSON.stringify(body.status) )
-           // console.log('Stringify : ' + JSON.stringify(body))
-      })
-          
 });
 
 
