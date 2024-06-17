@@ -84,8 +84,7 @@ export const sendMoneyUseAxios = tryCatch (async( req, res ) => {
         
             return res.status(200).json({ success: true, result: respons.data })
     }).catch(error => {
-        console.log('The response is failed');
-        console.log('The body is now : ' + JSON.stringify(error));
+        console.error('B2C Error:', error.response ? error.response.data : error.message);
         return res.status(400).json({ success: false, message: error })
     })
 
@@ -148,15 +147,25 @@ export const collectMoneyUseAxios = tryCatch( async( req, res ) => {
         .then( async(respons)  => {
 
             const collect = respons.data.result
+            console.log('Call collect response : respons.data.result')
             const id = collect.data.transaction.id
+            console.log('Call the id is : ' + id );
             const phone_number = data.subscriber.msisdn 
+            console.log('Call the phone Number : ' + phone_number );
             const amount = data.transaction.amount 
+            console.log('Call the amount ' + amount);
             const token = access_token
+            console.log('Call the token : ' + token );
             const reference = data.reference
+            console.log('Call the reference : ' + reference );
             const status = collect.data.transaction.status 
+            console.log('Call the status : ' + status );
             const response_code = collect.status.response_code 
+            console.log('Call the response code : ' + response_code );
             const result_code = collect.status.result_code 
+            console.log('Call result code : ' + result_code)
             const message = collect.status.message
+            console.log('Call the message : ' + message)
             const transact_date = currentTime()
             const business_type = 'C2B'
 
@@ -169,7 +178,7 @@ export const collectMoneyUseAxios = tryCatch( async( req, res ) => {
 
         return res.status(201).json({ success: true, result: respons.data })
     }).catch(error => {
-        console.error('Error:', error.response ? error.response.data : error.message);
+        console.error('C2B Error:', error.response ? error.response.data : error.message);
         return res.status(401).json({ success: false, message: error })
     }); 
 
