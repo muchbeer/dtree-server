@@ -60,8 +60,8 @@ export const sendMoneyUseAxios = tryCatch (async( req, res ) => {
       
       
     await axios.post(url, data,  { headers: disburse_headers })
-        .then( async(respons) => {
-            const disburse = await respons.data.result
+        .then( (respons) => {
+            const disburse = respons.data.result
             const id = disburse.data.transaction.id
             const phone_number = data.payee.msisdn 
             const amount = data.transaction.amount 
@@ -77,7 +77,7 @@ export const sendMoneyUseAxios = tryCatch (async( req, res ) => {
 
             const values = [ id, phone_number, amount, token, reference, status, response_code, result_code, message,airtel_money_id, transact_date, business_type ];
 
-            await connect.query( sql, values ).catch(error => {
+            connect.query( sql, values ).catch(error => {
                 console.log('Please capture error of the disbursement ' + error);
                 return res.status(200).json({ success:true, result: 'payment is made but data not save to the db ' })
             });
@@ -144,11 +144,11 @@ export const collectMoneyUseAxios = tryCatch( async( req, res ) => {
        `;
 
     await axios.post(url, data, { headers: collect_headers })
-        .then( async(respons)  => {
+        .then( (respons)  => {
 
-            const collect = await respons.data.result
+            const collect = respons.data.result
               console.log('Call collect response : respons.data.result');
-              console.log('The result collected is : ' + JSON.stringify(collect))
+              console.log('The result collected is : ' + collect)
           
             const id = collect.data.transaction.id
             console.log('Call the id is : ' + id );
@@ -173,7 +173,7 @@ export const collectMoneyUseAxios = tryCatch( async( req, res ) => {
 
             const collect_values = [ id, phone_number, amount, token, reference, status, response_code, result_code, message, transact_date, business_type ];
 
-            await connect.query( sql_collect, collect_values ).catch(error => {
+            connect.query( sql_collect, collect_values ).catch(error => {
                 console.log('Please capture error for collection ' + error);
                 return res.status(200).json({ success: true, result: 'payment is made but data not save to the db ' })
             });
