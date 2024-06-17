@@ -37,17 +37,16 @@ export const generateTransactionId = () => {
 };
 
 export const currentTime = () => {
-    // Current UTC time
-    const utcDate = new Date();
-
-    // Offset for GMT+3 in minutes (3 hours * 60 minutes)
-    const offsetMinutes = 3 * 60;
-
-    // Convert UTC to GMT+3
-    const gmtPlus3Date = new Date(utcDate.getTime() + offsetMinutes * 60000);
-
-  // Format the GMT+3 date
-    const datestr = gmtPlus3Date.toString().slice(0, -37);
+    const now = new Date();
+    const gmt3Time = new Date(now.getTime() + (3 * 60 * 60 * 1000));
+    
+    // To account for DST, check the offset directly from the GMT+3 time object
+    const gmt3Offset = gmt3Time.getTimezoneOffset() * 60 * 1000; // Convert minutes to milliseconds
+    
+    const adjustedTime = new Date(gmt3Time.getTime() + gmt3Offset);
+    const datestr = adjustedTime.toLocaleString()
+    
+    console.log("Current time in GMT+3 (adjusted for DST):", datestr );
 
     return datestr;
 }
