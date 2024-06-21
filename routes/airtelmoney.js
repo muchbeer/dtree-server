@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { collectMoneyUseAxios, sendMoneyUseAxios,  } from '../controllers/airtelmoney.js';
+import { collectMoneyUseAxios, retrieveAllMoney, retrieveAllMoneySent, sendMoneyUseAxios,  } from '../controllers/airtelmoney.js';
 
 const routerAirtelMoney = Router();
 
@@ -8,5 +8,9 @@ const routerAirtelMoney = Router();
 routerAirtelMoney.post( '/disburse', sendMoneyUseAxios );
 
 routerAirtelMoney.post( '/collect', collectMoneyUseAxios );
+
+routerAirtelMoney.post( '/', retrieveAllMoney );
+
+routerAirtelMoney.post( '/sent', retrieveAllMoneySent );
 
 export default routerAirtelMoney;

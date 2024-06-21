@@ -1,3 +1,6 @@
+import { getLastRecord } from "../../routes/common.js";
+import connect from "../../config.js";
+
 export const credentials = {
     apiKey: process.env.AT_API_KEY,
     username: process.env.AT_USERNAME  };
@@ -30,6 +33,16 @@ export const sumIteminArray = (arr) => {
     return total;
   }
 
+export const sumItemInDataObject = (data) => {
+    const sum = data.reduce((accumulator, currentValue) => {
+        const currentVal = parseInt(currentValue.amount)
+        const commission = currentVal * 1.02 + 200;
+        return accumulator + commission
+      }, 0);
+
+    return sum;
+}
+
 export const generateTransactionId = () => {
     const timestamp = Date.now(); // Current timestamp in milliseconds
     const randomNum = Math.floor(Math.random() * 1000000); // A random number between 0 and 999999
@@ -45,8 +58,19 @@ export const currentTime = () => {
     
     const adjustedTime = new Date(gmt3Time.getTime() + gmt3Offset);
     const datestr = adjustedTime.toLocaleString()
-    
-    console.log("Current time in GMT+3 (adjusted for DST):", datestr );
 
     return datestr;
+}
+
+export const deductBalanceFromUser = async ( totalAmount, user) => {
+    const balance_object =  await getLastRecord(user);
+      const current_balance_spent = balance_object.balance_spent;
+      const current_balance = parseInt(balance_object.balance);
+      const username = balance_object.user_email;
+      const deductAmount = totalAmount;
+       const updated_balance = current_balance - parseInt(deductAmount); 
+       const values_balance_updated = [ updated_balance.toString(), deductAmount, username, current_balance_spent ]; 
+       const sql_new_balance = 'INSERT INTO airtime_balance ( balance, deduct, user_email, balance_spent ) VALUES ( $1, $2, $3, $4 ) RETURNING *';
+       await connect.query( sql_new_balance, values_balance_updated );
+
 }

@@ -1,8 +1,9 @@
 import connect from "../config.js";
 import tryCatch from "./utils/trycatch.js";
-import { getLastRecord } from "../routes/common.js";
+//import { getLastRecord } from "../routes/common.js";
 import axios from 'axios';
 import AfricasTalking from 'africastalking';
+import { deductBalanceFromUser } from "./utils/common.js";
 // import * as dotenv from 'dotenv';
 
 // dotenv.config();
@@ -24,7 +25,7 @@ export const getAirtime = tryCatch(async (req, res) => {
     const result_view_airtime = await connect.query( user_sql, values );
     const fetch_data = result_view_airtime.rows
 
-    return res.status(200).json( {success: true , result: fetch_data} )
+    return res.status(200).json({ success: true , result: fetch_data });
   });
 
 export const getAllAirtimes = tryCatch(async (req, res) => {
@@ -158,6 +159,9 @@ const sendAirtimeToDb = async(respData, isSingle, user) => {
 
      //insert into balance 
      if(errorMessage === 'None') {
+      const deductAmount = totalAmount.replace('TZS ', '');
+      deductBalanceFromUser(deductAmount, user)
+      /*
       const balance_object = await  getLastRecord(user);
       const current_balance_spent = balance_object.balance_spent;
       const current_balance = parseInt(balance_object.balance);
@@ -166,8 +170,8 @@ const sendAirtimeToDb = async(respData, isSingle, user) => {
        const updated_balance = current_balance - parseInt(deductAmount); 
        const values_balance_updated = [ updated_balance.toString(), deductAmount, username, current_balance_spent ]; 
        const sql_new_balance = 'INSERT INTO airtime_balance ( balance, deduct, user_email, balance_spent ) VALUES ( $1, $2, $3, $4 ) RETURNING *';
-       const balance_response = await connect.query( sql_new_balance, values_balance_updated );
-
+       await connect.query( sql_new_balance, values_balance_updated );
+*/
      }
      
       } catch (error) {
