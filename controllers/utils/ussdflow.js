@@ -1,5 +1,4 @@
-import { convertDate, currentTime, insertFirstEntry, returnArrayFromText, returnValueFromArrayText, selectDaraja, tiketiMessage, ulinziMessage, updateTable } from "./common";
-import { sendBulkSMS } from "./common";
+import { sendBulkSMS, convertDate, currentTime, insertFirstEntry, returnArrayFromText, returnValueFromArrayText, selectDaraja, tiketiMessage, ulinziMessage, updateTable } from "./common.js";
 
 export const ulinziMagari = async( text, number, sessionId ) => {
 

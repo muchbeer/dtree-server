@@ -1,3 +1,4 @@
+import { Router } from "express";
 import { getAllTicket, getAllWalinzi, getMlinziDetail } from "../controllers/ulinzi.js";
 
 const routerWalinzi = Router();
