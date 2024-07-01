@@ -1,4 +1,4 @@
-import { getAllTicket, getAllWalinzi, getMlinziDetail } from "../controllers/ulinzi";
+import { getAllTicket, getAllWalinzi, getMlinziDetail } from "../controllers/ulinzi.js";
 
 const routerWalinzi = Router();
 
