@@ -1,5 +1,6 @@
-import tryCatch from "./utils/trycatch";
-import { ulinziMagari } from "./utils/ussdflow";
+
+import { ulinziMagari } from "./utils/ussdflow.js";
+import tryCatch from "./utils/trycatch.js";
 
 export const ussdToken = tryCatch(async (req, res) => {
 
