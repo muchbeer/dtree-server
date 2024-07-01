@@ -1,7 +1,7 @@
 import connect from "../config.js";
 import { getLastRecord } from "../routes/common.js";
 import tryCatch from "./utils/trycatch.js";
-
+import axios from "axios";
 
 export const getBalance = tryCatch(async (req, res) => {
 
@@ -15,6 +15,22 @@ export const getBalance = tryCatch(async (req, res) => {
 
     
   });
+
+  export const getATBalance = tryCatch( async ( req, res ) => {
+      
+    const balanceUrl = process.env.AT_USER_BALANCE + "?username=muchbeerx";
+  
+    const resp = await axios.get(balanceUrl, 
+      {
+        headers: {
+          'Accept': 'application/json',
+          'Content-Type': 'application/x-www-form-urlencoded',
+          'apiKey' : process.env.ATX_API_KEY
+        }
+      });
+    return res.status(200).json({ success: true, result: resp.data }) 
+    
+  })
 
 export const deductAirtime = tryCatch(async (req, res) => {
 

@@ -5,6 +5,10 @@ export const credentials = {
     apiKey: process.env.AT_API_KEY,
     username: process.env.AT_USERNAME  };
 
+export const ulinziMessage = 'Karibu sana HighLink upate huduma ya Ulinzi bora, ni furaha yetu kukuhudumia. Wahudumu wetu watakupigia simu'
+export const tiketiMessage = 'Karibu sana HighLink upate huduma ya usafiri bora, wahudumu wetu watakupigia simu. '
+
+
 export const convertNetworkCode = (networkCode) => {
 
     switch (networkCode) {
@@ -74,3 +78,112 @@ export const deductBalanceFromUser = async ( totalAmount, user) => {
        await connect.query( sql_new_balance, values_balance_updated );
 
 }
+
+export const sendBulkSMS = async ( phoneNumbers, message ) => {
+
+    try {
+      const data =   {
+        enqueue: true,
+        username: process.env.ATX_USERNAME,
+        senderId: 'INFORM',
+        phoneNumbers: phoneNumbers,
+        message: message,
+      }
+
+  
+    const resp = await axios.post(process.env.AT_BULK_SMS_URL, data, 
+      {headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+          'apiKey' : process.env.ATX_API_KEY
+        }
+      });
+
+
+    return resp.data
+    } catch (error) {
+      console.log('The error occured sending sms is : ', error)
+    }
+    
+}
+
+export const isEmptyArray = ( arrayEntry ) => {
+
+    if ( arrayEntry.length === 0 ) {
+        return true
+      } else {
+        return false
+      }
+}
+
+export const returnArrayFromText = ( text ) => {
+    const arryText = text.split('*');
+    return arryText.length 
+};
+
+export const returnValueFromArrayText = ( text, index ) => {
+    const arryText = text.split('*');
+    const value = arryText[index]
+    return value;
+}
+
+export const selectDaraja = ( text ) => {
+    switch ( text ) {
+        case '2*1':
+            return 'Daraja la juu'
+        case '2*2':
+            return 'Daraja la kati';
+        case '2*3':
+            return 'Daraja la kawaida';
+        default:
+            return 'Umekosea kuchagua daraja'
+    }
+}
+
+export const convertDate = ( month ) => {
+    
+    const currentYear = new Date().getFullYear();
+    switch ( month ) {
+        case '1':
+            return `Jan ${currentYear}`;
+        case '2':
+            return `Feb ${currentYear}`;
+        case '3':
+            return `March ${currentYear}`;
+        case '4':
+            return `April ${currentYear}`;
+        case '5':
+            return `May ${currentYear}`;
+        case '6':
+            return `June ${currentYear}`;
+        case '7':
+            return `July ${currentYear}`;
+        case '8':
+            return `Aug ${currentYear}`;
+        case '9':
+            return `Sept ${currentYear}`;
+        case '10':
+            return `Oct ${currentYear}`;
+        case '11':
+            return `Nov ${currentYear}`;
+        case '12':
+            return `Dec ${currentYear}`;
+        default:
+            return 'Invalid';
+    }
+}
+
+export const updateTable = ( setcolumn, firstEntry, sessionId ) => {
+
+    const sql = `UPDATE tomticket set ${setcolumn} = $1 WHERE session_id = $2`
+    const values = [ firstEntry , sessionId ]
+    connect.query( sql, values );
+}
+
+export const insertFirstEntry = ( number, sessionId, currentTim ) => {
+
+    const sql_first_entry = 'INSERT INTO tomticket ( phone_number, session_id, entry_date  ) VALUES( $1, $2, $3 ) RETURNING *';
+        const values_first_entry = [ number, sessionId, currentTim ];
+        connect.query( sql_first_entry, values_first_entry )
+}
+

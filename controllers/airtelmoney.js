@@ -11,14 +11,14 @@ export const sendMoneyUseAxios = tryCatch (async( req, res ) => {
     const { inputs, user } = req.body
 
     const postData = {
-        client_id: process.env.AIRTEL_CLIENT_ID_DISBURSE_LIVE,
-        client_secret: process.env.AIRTEL_SECRET_KEY_DISBURSE_LIVE,
+        client_id: process.env.AIRTEL_CLIENT_ID,
+        client_secret: process.env.AIRTEL_SECRET_KEY,
         grant_type: "client_credentials"
     }
     
     const token_url_test = 'https://openapiuat.airtel.africa/auth/oauth2/token'
     const token_url_live = 'https://openapi.airtel.africa/auth/oauth2/token'
-    const tokenData = await axios.post(token_url_live , postData, 
+    const tokenData = await axios.post(token_url_test , postData, 
         { headers: {
             'Content-Type': 'application/json',
             'Accept': '*/*',
@@ -30,11 +30,10 @@ export const sendMoneyUseAxios = tryCatch (async( req, res ) => {
     console.log('The value of token is : ', access_token );
 
     const url_live ='https://openapi.airtel.africa/standard/v1/disbursements/'
-    const url = 'https://openapiuat.airtel.africa/standard/v1/disbursements/';
+    const url_test = 'https://openapiuat.airtel.africa/interops/v1/payments/';
 
     const disburse_headers = {
         'Content-Type': 'application/json',
-        'Accept': '*/*',
         'X-Country': 'TZ',
         'X-Currency': 'TZS',
         'Authorization': 'Bearer ' + access_token
@@ -72,30 +71,38 @@ export const sendMoneyUseAxios = tryCatch (async( req, res ) => {
          
          const data = {
             "payee": {
-              "msisdn": parseInt(dataItem.phoneNumber)
+              "identifier_type": dataItem.phoneNumber,
+              "identifier_value": dataItem.phoneNumber,
+              "institute_category": "MERCHANT",
+              "institution_code": "tips-mno",
+              "currency": "TZS"
             },
-            "reference": "Pay Client",
-            "pin": process.env.AIRTEL_PIN_LIVE,
+            "pin": process.env.AIRTEL_PIN,
             "transaction": {
-              "amount": parseInt(dataItem.amount) ,
-              "id": generateTransactionId()
+              "amount": dataItem.amount ,
+              "id": generateTransactionId(),
+              "reference": "disburseToAll"
             }
           }; 
+          console.log('The amount is ', dataItem.amount)
+          console.log('The data sent is : ', JSON.stringify(data))
 
-          await axios.post(url_live, data,  { headers: disburse_headers })
+          await axios.post(url_test, data,  { headers: disburse_headers })
         .then( (respons) => {
             console.log('Succes response');
+            console.log('JSON response is Now: ', JSON.stringify(respons.data))
             deductBalanceFromUser( totalAmount, user_email );
             const disburse = respons.data
             const id = transactId
-            const phone_number = data.payee.msisdn 
+            const phone_number = data.payee.identifier_type
             const amount = data.transaction.amount 
             const token = access_token
-            const reference = data.reference
-            const status = disburse?.status.success
+            const reference = "Reward the mafundi"
+            const status = disburse.status.success
+            console.log('Success is : ', JSON.stringify(disburse.status))
             const response_code = disburse?.status.response_code 
-            const result_code = disburse?.status.result_code 
-            const message = disburse?.status.message
+            const result_code = disburse?.status.response_code 
+            const message = disburse?.data.transaction.message
             const airtel_money_id = disburse.status.response_code == 'DP00900001001' ? disburse.data.transaction.airtel_money_id  : 'no id'
             const transact_date = currentTime()
 

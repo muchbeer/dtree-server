@@ -8,6 +8,8 @@ import routerAirtime from "./routes/airtime.js";
 import routerMessage from './routes/message.js';
 import routerContact from "./routes/contact.js";
 import routerAirtelMoney from "./routes/airtelmoney.js";
+import routerUSSD from "./routes/ussd.js";
+import routerWalinzi from "./routes/ulinzi.js";
 
 
 dotenv.config();
@@ -17,6 +19,7 @@ app.use(express.json());
 
 app.use((req, res, next) => {
   //res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
+  res.setHeader('Access-Control-Allow-Origin', process.env.CLIENT_SERVER_URL_HIGHLINK );
   res.setHeader('Access-Control-Allow-Origin', process.env.CLIENT_SERVER_URL);
   res.setHeader(
     'Access-Control-Allow-Methods',
@@ -31,12 +34,14 @@ app.use((req, res, next) => {
 
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use('/api/auth', router); 
-app.use('/api/balance', routerBalance);
-app.use('/api/airtime', routerAirtime);
-app.use('/api/message', routerMessage);
-app.use('/api/contact', routerContact);
-app.use('/api/airtelmoney', routerAirtelMoney);
+app.use('/api/auth', router ); 
+app.use('/api/balance', routerBalance );
+app.use('/api/airtime', routerAirtime );
+app.use('/api/message', routerMessage );
+app.use('/api/contact', routerContact );
+app.use('/api/airtelmoney', routerAirtelMoney );
+app.use('/api/ussd', routerUSSD );
+app.use('/api/thomas', routerWalinzi );
 
 
 const port = process.env.PORT || 5001;
